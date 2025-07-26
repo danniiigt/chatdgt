@@ -1,0 +1,63 @@
+import { createServerSupabase } from "@/lib/supabase-server";
+import { NextRequest, NextResponse } from "next/server";
+import { DEFAULT_LOCALE } from "@/lib/constants";
+
+export async function GET(request: NextRequest) {
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
+  const error = requestUrl.searchParams.get("error");
+  const error_description = requestUrl.searchParams.get("error_description");
+
+  // Get the locale from the request headers or use default
+  const locale =
+    request.headers.get("accept-language")?.split(",")[0]?.split("-")[0] ||
+    DEFAULT_LOCALE;
+
+  if (error) {
+    console.error("Auth callback error:", error, error_description);
+    // Redirect to sign-in with error
+    return NextResponse.redirect(
+      new URL(
+        `/${locale}/sign-in?error=${encodeURIComponent(error_description || error)}`,
+        requestUrl.origin
+      )
+    );
+  }
+
+  if (code) {
+    try {
+      const supabase = createServerSupabase();
+
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+      if (error) {
+        console.error("Error exchanging code for session:", error);
+        return NextResponse.redirect(
+          new URL(`/${locale}/sign-in?error=auth_error`, requestUrl.origin)
+        );
+      }
+
+      // Successful authentication - redirect to email-confirmed page
+      if (data.user) {
+        return NextResponse.redirect(
+          new URL(`/${locale}/email-confirmed`, requestUrl.origin)
+        );
+      }
+
+      // Fallback redirect
+      return NextResponse.redirect(
+        new URL(`/${locale}/chat`, requestUrl.origin)
+      );
+    } catch (error) {
+      console.error("Unexpected error in auth callback:", error);
+      return NextResponse.redirect(
+        new URL(`/${locale}/sign-in?error=unexpected_error`, requestUrl.origin)
+      );
+    }
+  }
+
+  // No code parameter - redirect to sign-in
+  return NextResponse.redirect(
+    new URL(`/${locale}/sign-in?error=missing_code`, requestUrl.origin)
+  );
+}
