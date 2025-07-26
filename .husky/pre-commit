@@ -1,0 +1,12 @@
+# Exporta las traducciones de tolgee
+npm run tolgee-pull
+if [ $? -ne 0 ]; then
+  echo "Tolgee pull failed, commit aborted."
+  exit 1
+fi
+
+# Añade los cambios de las traducciones al commit
+git add -A
+
+# Continua con el commit
+exit 0
