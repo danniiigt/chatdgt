@@ -47,13 +47,17 @@ export type Database = {
           id: string
           title: string
           user_id: string
+          system_prompt: string | null
+          is_archived: boolean
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          title: string
+          title?: string
           user_id: string
+          system_prompt?: string | null
+          is_archived?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -61,6 +65,8 @@ export type Database = {
           id?: string
           title?: string
           user_id?: string
+          system_prompt?: string | null
+          is_archived?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -70,22 +76,164 @@ export type Database = {
           id: string
           chat_id: string
           content: string
-          role: 'user' | 'assistant'
+          role: 'user' | 'assistant' | 'system'
+          model: string | null
+          token_count: number | null
           created_at: string
         }
         Insert: {
           id?: string
           chat_id: string
           content: string
-          role: 'user' | 'assistant'
+          role: 'user' | 'assistant' | 'system'
+          model?: string | null
+          token_count?: number | null
           created_at?: string
         }
         Update: {
           id?: string
           chat_id?: string
           content?: string
-          role?: 'user' | 'assistant'
+          role?: 'user' | 'assistant' | 'system'
+          model?: string | null
+          token_count?: number | null
           created_at?: string
+        }
+      }
+      shared_chats: {
+        Row: {
+          id: string
+          chat_id: string
+          share_token: string
+          is_active: boolean
+          expires_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          chat_id: string
+          share_token?: string
+          is_active?: boolean
+          expires_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          chat_id?: string
+          share_token?: string
+          is_active?: boolean
+          expires_at?: string | null
+          created_at?: string
+        }
+      }
+      user_settings: {
+        Row: {
+          id: string
+          user_id: string
+          theme: 'light' | 'dark' | 'system'
+          language: string
+          default_model: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          theme?: 'light' | 'dark' | 'system'
+          language?: string
+          default_model?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          theme?: 'light' | 'dark' | 'system'
+          language?: string
+          default_model?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      chat_bookmarks: {
+        Row: {
+          id: string
+          user_id: string
+          chat_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          chat_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          chat_id?: string
+          created_at?: string
+        }
+      }
+      prompt_templates: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          content: string
+          category: string | null
+          is_public: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          content: string
+          category?: string | null
+          is_public?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          content?: string
+          category?: string | null
+          is_public?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_usage: {
+        Row: {
+          id: string
+          user_id: string
+          total_messages: number
+          total_tokens: number
+          reset_date: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          total_messages?: number
+          total_tokens?: number
+          reset_date?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          total_messages?: number
+          total_tokens?: number
+          reset_date?: string
+          created_at?: string
+          updated_at?: string
         }
       }
     }
@@ -93,7 +241,56 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_shared_chat_valid: {
+        Args: {
+          token: string
+        }
+        Returns: boolean
+      }
+      get_or_create_user_settings: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          theme: 'light' | 'dark' | 'system'
+          language: string
+          default_model: string
+          created_at: string
+          updated_at: string
+        }
+      }
+      increment_user_usage: {
+        Args: {
+          p_user_id: string
+          p_messages?: number
+          p_tokens?: number
+        }
+        Returns: {
+          id: string
+          user_id: string
+          total_messages: number
+          total_tokens: number
+          reset_date: string
+          created_at: string
+          updated_at: string
+        }
+      }
+      reset_user_usage: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          total_messages: number
+          total_tokens: number
+          reset_date: string
+          created_at: string
+          updated_at: string
+        }
+      }
     }
     Enums: {
       [_ in never]: never

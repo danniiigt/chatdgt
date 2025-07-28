@@ -37,8 +37,31 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Successful authentication - redirect to email-confirmed page
+      // Successful authentication
       if (data.user) {
+        try {
+          // Llamar al endpoint de setup para inicializar datos del usuario
+          const setupResponse = await fetch(`${requestUrl.origin}/api/auth/setup`, {
+            method: 'POST',
+            headers: {
+              'Cookie': request.headers.get('Cookie') || '',
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!setupResponse.ok) {
+            console.error('Error en setup del usuario:', await setupResponse.text());
+            // No fallar el auth por esto, solo logear el error
+          } else {
+            const setupData = await setupResponse.json();
+            console.log('Usuario configurado exitosamente:', setupData.message);
+          }
+        } catch (setupError) {
+          console.error('Error llamando al endpoint de setup:', setupError);
+          // No fallar el auth por esto
+        }
+
+        // Redirect to email-confirmed page
         return NextResponse.redirect(
           new URL(`/${locale}/email-confirmed`, requestUrl.origin)
         );
