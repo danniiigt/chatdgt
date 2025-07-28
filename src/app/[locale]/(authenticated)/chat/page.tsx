@@ -1,9 +1,12 @@
-import React from "react";
+import { ChatBoxLayout } from "@/components/views/chat/ChatBoxLayout";
+import { NoChatSelectedView } from "@/components/views/chat/NoChatSelectedView";
 
 const ChatPage = () => {
   return (
-    <div>
-      <h3>ChatPage</h3>
+    <div className="w-full h-full">
+      <ChatBoxLayout>
+        <NoChatSelectedView />
+      </ChatBoxLayout>
     </div>
   );
 };
