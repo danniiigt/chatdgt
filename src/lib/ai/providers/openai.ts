@@ -1,0 +1,184 @@
+import OpenAI from "openai";
+import type { AIProvider, AIResponse, Message, ModelConfig } from "../types";
+import {
+  AIProviderError,
+  AIRateLimitError,
+  AIQuotaExceededError,
+} from "../types";
+
+// OpenAI model configurations
+const OPENAI_MODELS: Record<string, ModelConfig> = {
+  "gpt-4o-mini": {
+    name: "gpt-4o-mini",
+    displayName: "GPT-4o Mini",
+    maxTokens: 16384,
+    contextWindow: 128000,
+    costPer1kTokens: {
+      input: 0.00015,
+      output: 0.0006,
+    },
+  },
+  "gpt-4o": {
+    name: "gpt-4o",
+    displayName: "GPT-4o",
+    maxTokens: 4096,
+    contextWindow: 128000,
+    costPer1kTokens: {
+      input: 0.005,
+      output: 0.015,
+    },
+  },
+  "gpt-3.5-turbo": {
+    name: "gpt-3.5-turbo",
+    displayName: "GPT-3.5 Turbo",
+    maxTokens: 4096,
+    contextWindow: 16385,
+    costPer1kTokens: {
+      input: 0.0015,
+      output: 0.002,
+    },
+  },
+};
+
+// System prompt in English with language instruction
+const SYSTEM_PROMPT = `You are a helpful AI assistant. Always respond in the same language that the user is speaking to you. Be conversational, helpful, and provide accurate information.`;
+
+export class OpenAIProvider implements AIProvider {
+  private client: OpenAI;
+  private models = OPENAI_MODELS;
+
+  constructor(apiKey: string) {
+    if (!apiKey) {
+      throw new Error("OpenAI API key is required");
+    }
+
+    this.client = new OpenAI({
+      apiKey,
+    });
+  }
+
+  get name(): string {
+    return "openai";
+  }
+
+  getSupportedModels(): string[] {
+    return Object.keys(this.models);
+  }
+
+  getDefaultModel(): string {
+    return "gpt-4o-mini";
+  }
+
+  getModelConfig(model: string): ModelConfig | undefined {
+    return this.models[model];
+  }
+
+  private formatMessages(
+    messages: Message[]
+  ): OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
+    // Add system prompt at the beginning
+    const formattedMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
+      [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
+      ];
+
+    // Add user messages (filter out system messages from input)
+    const userMessages = messages.filter((msg) => msg.role !== "system");
+    userMessages.forEach((msg) => {
+      formattedMessages.push({
+        role: msg.role as "user" | "assistant",
+        content: msg.content,
+      });
+    });
+
+    return formattedMessages;
+  }
+
+  async generateResponse(
+    messages: Message[],
+    model: string = this.getDefaultModel()
+  ): Promise<AIResponse> {
+    try {
+      if (!this.models[model]) {
+        throw new AIProviderError(`Unsupported model: ${model}`, this.name);
+      }
+
+      const modelConfig = this.models[model];
+      const formattedMessages = this.formatMessages(messages);
+
+      const completion = await this.client.chat.completions.create({
+        model,
+        messages: formattedMessages,
+        max_tokens: modelConfig.maxTokens,
+        temperature: 0.7,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      });
+
+      const choice = completion.choices[0];
+      if (!choice || !choice.message) {
+        throw new AIProviderError(
+          "No response received from OpenAI",
+          this.name
+        );
+      }
+
+      const content = choice.message.content || "";
+      const inputTokens = completion.usage?.prompt_tokens || 0;
+      const outputTokens = completion.usage?.completion_tokens || 0;
+      const totalTokens =
+        completion.usage?.total_tokens || inputTokens + outputTokens;
+
+      return {
+        content,
+        tokens: totalTokens,
+        model,
+        finishReason: choice.finish_reason as any,
+      };
+    } catch (error: any) {
+      // Handle OpenAI specific errors
+      if (error.status === 429) {
+        const retryAfter = error.headers?.["retry-after"]
+          ? parseInt(error.headers["retry-after"])
+          : undefined;
+        throw new AIRateLimitError(this.name, retryAfter);
+      }
+
+      if (error.status === 402 || error.code === "insufficient_quota") {
+        throw new AIQuotaExceededError(this.name);
+      }
+
+      if (error.status === 401) {
+        throw new AIProviderError(
+          "Invalid API key for OpenAI",
+          this.name,
+          error
+        );
+      }
+
+      if (error.status === 400) {
+        throw new AIProviderError(
+          `Invalid request to OpenAI: ${error.message}`,
+          this.name,
+          error
+        );
+      }
+
+      // Re-throw if it's already our custom error
+      if (error instanceof AIProviderError) {
+        throw error;
+      }
+
+      // Generic error handling
+      throw new AIProviderError(
+        `OpenAI API error: ${error.message || "Unknown error"}`,
+        this.name,
+        error
+      );
+    }
+  }
+}

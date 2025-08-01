@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientSupabase } from "@/lib/supabase";
+import { createClientSupabase } from "@/lib/supabase/supabase";
 import type { User } from "@supabase/supabase-js";
 
 type Props = {
@@ -19,9 +19,11 @@ export default function UnauthenticatedLayout({ children }: Props) {
     // Check current session
     const checkUser = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
-        
+
         // If user is authenticated, redirect to chat
         if (session?.user) {
           router.push("/chat");
@@ -37,16 +39,16 @@ export default function UnauthenticatedLayout({ children }: Props) {
     checkUser();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        
-        // If user just signed in, redirect to chat
-        if (session?.user && event === "SIGNED_IN") {
-          router.push("/chat");
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null);
+
+      // If user just signed in, redirect to chat
+      if (session?.user && event === "SIGNED_IN") {
+        router.push("/chat");
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();

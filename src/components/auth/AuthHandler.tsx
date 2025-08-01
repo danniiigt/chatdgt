@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClientSupabase } from "@/lib/supabase";
+import { createClientSupabase } from "@/lib/supabase/supabase";
 import { toast } from "sonner";
 import { useTranslate } from "@tolgee/react";
 
@@ -30,7 +30,9 @@ export function AuthHandler() {
         );
         // Clean URL and redirect to error page
         window.history.replaceState({}, "", window.location.pathname);
-        router.push(`/email-verification-error?error=${encodeURIComponent(errorDescription || error)}`);
+        router.push(
+          `/email-verification-error?error=${encodeURIComponent(errorDescription || error)}`
+        );
         return;
       }
 
@@ -38,7 +40,7 @@ export function AuthHandler() {
         try {
           // Exchange the token for a session
           const { data, error } = await supabase.auth.getSession();
-          
+
           if (error) {
             console.error("Error getting session:", error);
             toast.error(
@@ -54,7 +56,7 @@ export function AuthHandler() {
           if (data.session) {
             // Clean URL
             window.history.replaceState({}, "", window.location.pathname);
-            
+
             // Redirect to email-confirmed page
             router.push("/email-confirmed");
             return;

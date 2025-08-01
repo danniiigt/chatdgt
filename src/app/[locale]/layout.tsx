@@ -4,6 +4,7 @@ import { TolgeeNextProvider } from "@/tolgee/client";
 import { LOCALE, LOCALES } from "@/lib/constants";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthHandler } from "@/components/auth/AuthHandler";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -22,9 +23,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <div>
       <TolgeeNextProvider locales={locales} locale={locale}>
-        <AuthHandler />
-        {children}
-        <Toaster />
+        <QueryProvider>
+          <AuthHandler />
+          {children}
+          <Toaster />
+        </QueryProvider>
       </TolgeeNextProvider>
     </div>
   );

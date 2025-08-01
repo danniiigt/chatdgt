@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useTranslate } from "@tolgee/react";
-import { createClientSupabase } from "@/lib/supabase";
+import { createClientSupabase } from "@/lib/supabase/supabase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";

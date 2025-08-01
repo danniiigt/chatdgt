@@ -8,9 +8,21 @@ import { ChatInput } from "./ChatInput";
 
 interface ChatBoxLayoutProps {
   children: React.ReactNode;
+  chatId?: string;
+  sendMessage: (
+    message: string,
+    chatId?: string,
+    model?: string
+  ) => Promise<void>;
+  isLoading: boolean;
 }
 
-export const ChatBoxLayout = ({ children }: ChatBoxLayoutProps) => {
+export const ChatBoxLayout = ({
+  children,
+  chatId,
+  sendMessage,
+  isLoading,
+}: ChatBoxLayoutProps) => {
   // Third party hooks
   const { t } = useTranslate();
   const { open, setOpen } = useSidebar();
@@ -77,14 +89,18 @@ export const ChatBoxLayout = ({ children }: ChatBoxLayoutProps) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Messages area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="flex-1 w-full h-full max-w-6xl px-4 md:px-6 mx-auto">
+          <div className="flex-1 w-full h-full max-w-4xl mx-auto">
             {children}
           </div>
         </div>
 
         {/* Chat input box - Fixed at bottom */}
         <div>
-          <ChatInput />
+          <ChatInput
+            chatId={chatId}
+            sendMessage={sendMessage}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

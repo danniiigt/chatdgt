@@ -1,4 +1,4 @@
-import { createServerSupabase } from "@/lib/supabase-server";
+import { createServerSupabase } from "@/lib/supabase/supabase-server";
 import { NextRequest, NextResponse } from "next/server";
 import { DEFAULT_LOCALE } from "@/lib/constants";
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     try {
-      const supabase = createServerSupabase();
+      const supabase = await createServerSupabase();
 
       const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -41,23 +41,29 @@ export async function GET(request: NextRequest) {
       if (data.user) {
         try {
           // Llamar al endpoint de setup para inicializar datos del usuario
-          const setupResponse = await fetch(`${requestUrl.origin}/api/auth/setup`, {
-            method: 'POST',
-            headers: {
-              'Cookie': request.headers.get('Cookie') || '',
-              'Content-Type': 'application/json'
+          const setupResponse = await fetch(
+            `${requestUrl.origin}/api/auth/setup`,
+            {
+              method: "POST",
+              headers: {
+                Cookie: request.headers.get("Cookie") || "",
+                "Content-Type": "application/json",
+              },
             }
-          });
+          );
 
           if (!setupResponse.ok) {
-            console.error('Error en setup del usuario:', await setupResponse.text());
+            console.error(
+              "Error en setup del usuario:",
+              await setupResponse.text()
+            );
             // No fallar el auth por esto, solo logear el error
           } else {
             const setupData = await setupResponse.json();
-            console.log('Usuario configurado exitosamente:', setupData.message);
+            console.log("Usuario configurado exitosamente:", setupData.message);
           }
         } catch (setupError) {
-          console.error('Error llamando al endpoint de setup:', setupError);
+          console.error("Error llamando al endpoint de setup:", setupError);
           // No fallar el auth por esto
         }
 

@@ -1,30 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Mic, Send, ChevronDown, Paperclip, ArrowUp } from "lucide-react";
+import { Mic, Paperclip, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ModelSelector } from "@/components/ui/ModelSelector";
 import { useTranslate } from "@tolgee/react";
 
-export const ChatInput = () => {
+interface ChatInputProps {
+  chatId?: string;
+  sendMessage: (
+    message: string,
+    chatId?: string,
+    model?: string
+  ) => Promise<void>;
+  isLoading: boolean;
+}
+
+export const ChatInput = ({
+  chatId,
+  sendMessage,
+  isLoading,
+}: ChatInputProps) => {
   // Third party hooks
   const { t } = useTranslate();
 
   // State
   const [message, setMessage] = useState("");
-  const [selectedModel, setSelectedModel] = useState("GPT-4o");
+  const [selectedModel, setSelectedModel] = useState("gpt-4o-mini");
   const [isRecording, setIsRecording] = useState(false);
 
   // Helpers / Functions
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
-    console.log("Sending message:", message);
-    setMessage("");
+  const handleSendMessage = async () => {
+    if (!message.trim() || isLoading) return;
+
+    const messageToSend = message.trim();
+    setMessage(""); // Clear input immediately for better UX
+
+    try {
+      await sendMessage(messageToSend, chatId, selectedModel);
+    } catch (error) {
+      // Error handling is done in the useChat hook
+      console.error("Error sending message:", error);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -40,21 +57,12 @@ export const ChatInput = () => {
     console.log("Voice recording:", !isRecording);
   };
 
-  const handleModelChange = (model: string) => {
-    setSelectedModel(model);
-    console.log("Model changed to:", model);
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
   };
 
-  // Constants
-  const availableModels = [
-    "GPT-4o",
-    "GPT-4o mini",
-    "GPT-4 Turbo",
-    "GPT-3.5 Turbo",
-  ];
-
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 py-8">
+    <div className="w-full max-w-4xl mx-auto p-4 pb-8 pt-0">
       {/* Chat input box */}
       <div className="relative">
         <div className="flex flex-col p-4 border border-gray-200 rounded-4xl shadow-xs bg-white dark:bg-gray-800 dark:border-gray-700">
@@ -103,11 +111,15 @@ export const ChatInput = () => {
               {/* Send button */}
               <Button
                 onClick={handleSendMessage}
-                disabled={!message.trim()}
+                disabled={!message.trim() || isLoading}
                 size="icon"
                 className="h-8 w-8 rounded-full bg-black text-white hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               >
-                <ArrowUp className="size-4" />
+                {isLoading ? (
+                  <div className="size-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <ArrowUp className="size-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -123,30 +135,10 @@ export const ChatInput = () => {
               <Paperclip className="size-4" />
             </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="px-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-muted-foreground"
-                >
-                  <span className="mr-1">{selectedModel}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {availableModels.map((model) => (
-                  <DropdownMenuItem
-                    key={model}
-                    onClick={() => handleModelChange(model)}
-                    className={
-                      model === selectedModel ? "bg-muted font-medium" : ""
-                    }
-                  >
-                    {model}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ModelSelector
+              onModelChange={handleModelChange}
+              disabled={isLoading}
+            />
           </div>
         </div>
       </div>

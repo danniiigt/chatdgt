@@ -1,14 +1,34 @@
-import { Icons } from "@/components/ui/icons";
-import { getTranslate } from "@/tolgee/server";
-import { SuggestedMessages } from "./SuggestedMessages";
+"use client";
 
-export const NoChatSelectedView = async () => {
+import { Icons } from "@/components/ui/icons";
+import { useTranslate } from "@tolgee/react";
+import { SuggestedMessages } from "./SuggestedMessages";
+import { useChat } from "@/hooks/useChat";
+import { useEffect, useState } from "react";
+
+export const NoChatSelectedView = () => {
   // Third party hooks
-  const t = await getTranslate();
+  const { t } = useTranslate();
+
+  // State
+  const [localStorageModel, setLocalStorageModel] = useState<
+    string | undefined
+  >(undefined);
+
+  // Custom hooks
+  const { sendMessage, isLoading } = useChat();
+
+  // Effects
+  useEffect(() => {
+    const model = localStorage.getItem("chatdgt-selected-model");
+    if (model) {
+      setLocalStorageModel(model);
+    }
+  }, []);
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="flex flex-col items-center pb-16">
+      <div className="flex flex-col items-center pb-16 px-4">
         <header className="space-y-8">
           <Icons.chatgpt className="size-40 mx-auto" />
           <div className="flex-1 flex items-center justify-center">
@@ -24,7 +44,12 @@ export const NoChatSelectedView = async () => {
         </header>
 
         <div className="mt-8">
-          <SuggestedMessages />
+          <SuggestedMessages
+            onMessageSelect={(message) =>
+              sendMessage(message, undefined, localStorageModel)
+            }
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>
