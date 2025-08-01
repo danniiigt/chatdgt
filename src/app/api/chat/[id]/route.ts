@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/supabase-server";
+import { ChatsServer } from "@/services/Chats";
+import { MessagesServer } from "@/services/Messages";
 
 interface RouteParams {
   params: Promise<{
@@ -25,33 +27,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Verify chat exists and belongs to user
-    const { data: chat, error: chatError } = await supabase
-      .from("chats")
-      .select("*")
-      .eq("id", chatId)
-      .eq("user_id", user.id) // Security: ensure user owns the chat
-      .single();
-    
-    if (chatError || !chat) {
-      console.error("Chat not found or access denied:", chatError);
+    // Verify chat exists and belongs to user using service
+    let chat;
+    try {
+      chat = await ChatsServer.getByIdAndUserId(chatId, user.id);
+    } catch (error) {
+      console.error("Chat not found or access denied:", error);
       return NextResponse.json(
         { error: "Conversación no encontrada" },
         { status: 404 }
       );
     }
 
-    // Get all messages for this chat (no pagination for the useChat hook)
-    const { data: messages, error: messagesError } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("chat_id", chatId)
-      .order("created_at", { ascending: true });
-      
-    if (messagesError) {
-      console.error("Error loading messages:", messagesError);
-      throw messagesError;
-    }
+    // Get all messages for this chat using service
+    const messages = await MessagesServer.getByChatId(chatId, {
+      orderBy: "created_at",
+      ascending: true
+    });
 
     // Return chat object with embedded messages
     return NextResponse.json({
@@ -61,7 +53,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         title: chat.title,
         created_at: chat.created_at,
         updated_at: chat.updated_at,
-        messages: (messages || []).map((message) => ({
+        messages: messages.map((message) => ({
           id: message.id,
           content: message.content,
           role: message.role,

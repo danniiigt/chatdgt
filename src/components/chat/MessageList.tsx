@@ -24,6 +24,7 @@ interface MessageListProps {
   messages: Message[];
   isLoading?: boolean;
   className?: string;
+  onMessageSelect?: (message: string) => void;
 }
 
 const MessageBubble = ({ message }: { message: Message }) => {
@@ -259,6 +260,7 @@ export const MessageList = ({
   messages,
   isLoading,
   className,
+  onMessageSelect,
 }: MessageListProps) => {
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);

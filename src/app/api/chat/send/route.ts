@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/supabase-server";
 import { getAIProvider } from "@/lib/ai";
-import { Chats, Messages } from "@/services";
+import { ChatsServer } from "@/services/Chats";
+import { MessagesServer } from "@/services/Messages";
 import type { Message } from "@/lib/ai/types";
 
 interface SendMessageRequest {
@@ -44,81 +45,48 @@ export async function POST(request: NextRequest) {
     // TODO: Implement usage limits later
     // For now, we'll skip usage checking to get the MVP working
 
-    // Get or create chat
+    // Get or create chat using services
     let chat;
     if (chatId) {
-      // Use existing chat - use server client directly to avoid RLS issues
-      const { data: existingChat, error: findError } = await supabase
-        .from("chats")
-        .select("*")
-        .eq("id", chatId)
-        .eq("user_id", user.id) // Security: ensure user owns the chat
-        .single();
-        
-      if (findError || !existingChat) {
-        console.error("Chat not found or access denied:", findError);
+      // Use existing chat with security check
+      try {
+        chat = await ChatsServer.getByIdAndUserId(chatId, user.id);
+      } catch (error) {
+        console.error("Chat not found or access denied:", error);
         return NextResponse.json(
           { error: "Chat no encontrado" },
           { status: 404 }
         );
       }
-      
-      chat = existingChat;
     } else {
       // Create new chat with auto-generated title
       const title = message.slice(0, 50) + (message.length > 50 ? "..." : "");
       console.log("Creating new chat for user:", user.id, "with title:", title);
       
-      // Use server supabase client directly to avoid RLS issues
-      const { data: newChat, error: createError } = await supabase
-        .from("chats")
-        .insert({
-          user_id: user.id,
-          title,
-        })
-        .select()
-        .single();
-        
-      if (createError) {
-        console.error("Error creating chat:", createError);
-        throw createError;
-      }
+      chat = await ChatsServer.create({
+        user_id: user.id,
+        title,
+      });
       
-      chat = newChat;
       console.log("Chat created successfully:", chat.id);
     }
 
-    // Save user message - use server client directly
-    const { data: userMessage, error: userMsgError } = await supabase
-      .from("messages")
-      .insert({
-        chat_id: chat.id,
-        content: message,
-        role: "user",
-        token_count: 0, // We'll calculate this later if needed
-      })
-      .select()
-      .single();
-      
-    if (userMsgError) {
-      console.error("Error creating user message:", userMsgError);
-      throw userMsgError;
-    }
+    // Save user message using service
+    const userMessage = await MessagesServer.create({
+      chat_id: chat.id,
+      content: message,
+      role: "user",
+      token_count: 0, // We'll calculate this later if needed
+    });
 
-    // Get conversation history for context - use server client directly
-    const { data: conversationMessages, error: historyError } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("chat_id", chat.id)
-      .order("created_at", { ascending: true });
-      
-    if (historyError) {
-      console.error("Error loading conversation history:", historyError);
-      throw historyError;
-    }
+    // Get conversation history for context using service
+    const conversationMessages = await MessagesServer.getByChatId(chat.id, {
+      orderBy: "created_at",
+      ascending: true
+    });
 
     // Format messages for AI provider
-    const aiMessages: Message[] = (conversationMessages || [])
+    const aiMessages: Message[] = conversationMessages
       .filter((msg) => msg.id !== userMessage.id) // Exclude the just-created message
       .map((msg) => ({
         role: msg.role as "user" | "assistant",
@@ -138,34 +106,22 @@ export async function POST(request: NextRequest) {
       model || "gpt-4o-mini"
     );
 
-    // Save AI response - use server client directly
-    const { data: assistantMessage, error: assistantMsgError } = await supabase
-      .from("messages")
-      .insert({
-        chat_id: chat.id,
-        content: aiResponse.content,
-        role: "assistant",
-        token_count: aiResponse.tokens,
-        model: aiResponse.model,
-      })
-      .select()
-      .single();
-      
-    if (assistantMsgError) {
-      console.error("Error creating assistant message:", assistantMsgError);
-      throw assistantMsgError;
-    }
+    // Save AI response using service
+    const assistantMessage = await MessagesServer.create({
+      chat_id: chat.id,
+      content: aiResponse.content,
+      role: "assistant",
+      token_count: aiResponse.tokens,
+      model: aiResponse.model,
+    });
 
     // TODO: Update user usage when implementing limits
     // await UserUsage.increment(1, aiResponse.tokens);
 
-    // Update chat's updated_at timestamp - use server client directly
-    await supabase
-      .from("chats")
-      .update({
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", chat.id);
+    // Update chat's updated_at timestamp using service
+    await ChatsServer.update(chat.id, {
+      updated_at: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

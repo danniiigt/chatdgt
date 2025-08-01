@@ -1,4 +1,5 @@
 import { createClientSupabase } from "@/lib/supabase/supabase";
+import { createServerSupabase } from "@/lib/supabase/supabase-server";
 import type { Database } from "@/lib/supabase/supabase";
 
 type Chat = Database["public"]["Tables"]["chats"]["Row"];
@@ -304,5 +305,152 @@ export const Chats = {
 
     if (error) throw error;
     return count || 0;
+  },
+};
+
+// Server-side operations (for API routes)
+export const ChatsServer = {
+  /**
+   * Obtener chats por ID de usuario con paginación y búsqueda (versión servidor)
+   */
+  async getByUserId(
+    userId: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+      search?: string;
+      orderBy?: keyof Chat;
+      ascending?: boolean;
+    }
+  ): Promise<Chat[]> {
+    const supabase = await createServerSupabase();
+    const {
+      limit = 20,
+      offset = 0,
+      search,
+      orderBy = "updated_at",
+      ascending = false,
+    } = options || {};
+
+    let query = supabase
+      .from("chats")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("is_archived", false);
+
+    // Add search filter if provided
+    if (search?.trim()) {
+      query = query.ilike("title", `%${search.trim()}%`);
+    }
+
+    // Add ordering and pagination
+    const { data: chats, error } = await query
+      .order(orderBy as string, { ascending })
+      .range(offset, offset + limit - 1);
+
+    if (error) throw error;
+    return chats || [];
+  },
+
+  /**
+   * Contar chats por ID de usuario con búsqueda opcional (versión servidor)
+   */
+  async getCountByUserId(userId: string, search?: string): Promise<number> {
+    const supabase = await createServerSupabase();
+
+    let query = supabase
+      .from("chats")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("is_archived", false);
+
+    // Add search filter if provided
+    if (search?.trim()) {
+      query = query.ilike("title", `%${search.trim()}%`);
+    }
+
+    const { count, error } = await query;
+
+    if (error) throw error;
+    return count || 0;
+  },
+
+  /**
+   * Eliminar un chat por ID y usuario (versión servidor con seguridad)
+   */
+  async deleteByUserAndId(userId: string, chatId: string): Promise<boolean> {
+    const supabase = await createServerSupabase();
+
+    // Verify chat exists and belongs to user
+    const { data: chat, error: findError } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("id", chatId)
+      .eq("user_id", userId)
+      .single();
+      
+    if (findError || !chat) {
+      throw new Error("Conversación no encontrada");
+    }
+
+    // Delete the chat
+    const { error: deleteError } = await supabase
+      .from("chats")
+      .delete()
+      .eq("id", chatId)
+      .eq("user_id", userId);
+      
+    if (deleteError) throw deleteError;
+    return true;
+  },
+
+  /**
+   * Obtener un chat por ID y usuario (versión servidor con seguridad)
+   */
+  async getByIdAndUserId(chatId: string, userId: string): Promise<Chat> {
+    const supabase = await createServerSupabase();
+
+    const { data: chat, error } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("id", chatId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error) throw error;
+    return chat;
+  },
+
+  /**
+   * Crear un nuevo chat (versión servidor)
+   */
+  async create(data: ChatInsert): Promise<Chat> {
+    const supabase = await createServerSupabase();
+
+    const { data: chat, error } = await supabase
+      .from("chats")
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return chat;
+  },
+
+  /**
+   * Actualizar un chat (versión servidor)
+   */
+  async update(id: string, data: ChatUpdate): Promise<Chat> {
+    const supabase = await createServerSupabase();
+
+    const { data: chat, error } = await supabase
+      .from("chats")
+      .update(data)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return chat;
   },
 };

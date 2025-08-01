@@ -1,4 +1,5 @@
 import { createClientSupabase } from "@/lib/supabase/supabase";
+import { createServerSupabase } from "@/lib/supabase/supabase-server";
 import type { Database } from "@/lib/supabase/supabase";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"];
@@ -182,5 +183,87 @@ export const Messages = {
 
     if (error) throw error;
     return count || 0;
+  },
+};
+
+// Server-side operations (for API routes)
+export const MessagesServer = {
+  /**
+   * Obtener todos los mensajes de un chat específico (versión servidor)
+   */
+  async getByChatId(
+    chatId: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+      orderBy?: keyof Message;
+      ascending?: boolean;
+    }
+  ): Promise<Message[]> {
+    const supabase = await createServerSupabase();
+    const {
+      limit = 1000,
+      offset = 0,
+      orderBy = "created_at",
+      ascending = true,
+    } = options || {};
+
+    const { data: messages, error } = await supabase
+      .from("messages")
+      .select("*")
+      .eq("chat_id", chatId)
+      .order(orderBy as string, { ascending })
+      .range(offset, offset + limit - 1);
+
+    if (error) throw error;
+    return messages || [];
+  },
+
+  /**
+   * Crear un nuevo mensaje (versión servidor)
+   */
+  async create(data: MessageInsert): Promise<Message> {
+    const supabase = await createServerSupabase();
+
+    const { data: message, error } = await supabase
+      .from("messages")
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return message;
+  },
+
+  /**
+   * Actualizar un mensaje (versión servidor)
+   */
+  async update(id: string, data: MessageUpdate): Promise<Message> {
+    const supabase = await createServerSupabase();
+
+    const { data: message, error } = await supabase
+      .from("messages")
+      .update(data)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return message;
+  },
+
+  /**
+   * Eliminar un mensaje (versión servidor)
+   */
+  async delete(id: string): Promise<boolean> {
+    const supabase = await createServerSupabase();
+
+    const { error } = await supabase
+      .from("messages")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+    return true;
   },
 };

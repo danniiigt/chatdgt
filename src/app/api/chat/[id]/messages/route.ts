@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/supabase-server";
-import { Chats, Messages } from "@/services";
+import { ChatsServer } from "@/services/Chats";
+import { MessagesServer } from "@/services/Messages";
 
 interface RouteParams {
   params: Promise<{
@@ -26,16 +27,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Verify chat exists and belongs to user - use server client directly
-    const { data: chat, error: chatError } = await supabase
-      .from("chats")
-      .select("*")
-      .eq("id", chatId)
-      .eq("user_id", user.id) // Security: ensure user owns the chat
-      .single();
-    
-    if (chatError || !chat) {
-      console.error("Chat not found or access denied:", chatError);
+    // Verify chat exists and belongs to user using service
+    let chat;
+    try {
+      chat = await ChatsServer.getByIdAndUserId(chatId, user.id);
+    } catch (error) {
+      console.error("Chat not found or access denied:", error);
       return NextResponse.json(
         { error: "Conversación no encontrada" },
         { status: 404 }
@@ -48,30 +45,17 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 100); // Max 100 messages per request
     const offset = (page - 1) * limit;
 
-    // Get messages with pagination - use server client directly
-    const { data: messages, error: messagesError } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("chat_id", chatId)
-      .order("created_at", { ascending: true })
-      .range(offset, offset + limit - 1);
-      
-    if (messagesError) {
-      console.error("Error loading messages:", messagesError);
-      throw messagesError;
-    }
+    // Get messages with pagination using service
+    const messages = await MessagesServer.getByChatId(chatId, {
+      limit,
+      offset,
+      orderBy: "created_at",
+      ascending: true
+    });
 
-    // Get total count for pagination info
-    const { count: totalMessages, error: countError } = await supabase
-      .from("messages")
-      .select("*", { count: "exact", head: true })
-      .eq("chat_id", chatId);
-      
-    if (countError) {
-      console.error("Error counting messages:", countError);
-      throw countError;
-    }
-    const totalMessagesCount = totalMessages || 0;
+    // Get total count for pagination info by getting all messages count
+    const allMessages = await MessagesServer.getByChatId(chatId);
+    const totalMessagesCount = allMessages.length;
     const totalPages = Math.ceil(totalMessagesCount / limit);
     const hasNextPage = page < totalPages;
     const hasPreviousPage = page > 1;
@@ -85,7 +69,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           created_at: chat.created_at,
           updated_at: chat.updated_at,
         },
-        messages: (messages || []).map((message) => ({
+        messages: messages.map((message) => ({
           id: message.id,
           content: message.content,
           role: message.role,

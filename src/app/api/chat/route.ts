@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/supabase-server";
+import { ChatsServer } from "@/services/Chats";
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,46 +31,19 @@ export async function GET(request: NextRequest) {
 
     console.log("Query params:", { page, limit, search, offset });
 
-    // Build query - use server client directly to avoid RLS issues
-    let query = supabase
-      .from("chats")
-      .select("*")
-      .eq("user_id", user.id) // Security: ensure user owns the chats
-      .order("updated_at", { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    // Add search filter if provided
-    if (search.trim()) {
-      query = query.ilike("title", `%${search.trim()}%`);
-    }
-
-    const { data: chats, error: chatsError } = await query;
-    
-    if (chatsError) {
-      console.error("Error loading chats:", chatsError);
-      throw chatsError;
-    }
+    // Get chats using service
+    const chats = await ChatsServer.getByUserId(user.id, {
+      limit,
+      offset,
+      search: search || undefined,
+      orderBy: "updated_at",
+      ascending: false,
+    });
 
     console.log("Loaded chats:", chats?.length || 0);
 
-    // Get total count for pagination info - use server client directly
-    let countQuery = supabase
-      .from("chats")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id);
-
-    if (search.trim()) {
-      countQuery = countQuery.ilike("title", `%${search.trim()}%`);
-    }
-
-    const { count: totalChats, error: countError } = await countQuery;
-    
-    if (countError) {
-      console.error("Error counting chats:", countError);
-      throw countError;
-    }
-
-    const totalCount = totalChats || 0;
+    // Get total count using service
+    const totalCount = await ChatsServer.getCountByUserId(user.id, search || undefined);
     const totalPages = Math.ceil(totalCount / limit);
     const hasNextPage = page < totalPages;
     const hasPreviousPage = page > 1;
@@ -77,7 +51,7 @@ export async function GET(request: NextRequest) {
     console.log("Pagination info:", { totalCount, totalPages, hasNextPage, hasPreviousPage });
 
     // Format response with additional metadata
-    const formattedChats = (chats || []).map((chat) => ({
+    const formattedChats = chats.map((chat) => ({
       id: chat.id,
       title: chat.title,
       created_at: chat.created_at,
@@ -147,33 +121,8 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Verify chat exists and belongs to user - use server client directly
-    const { data: chat, error: findError } = await supabase
-      .from("chats")
-      .select("*")
-      .eq("id", chatId)
-      .eq("user_id", user.id) // Security: ensure user owns the chat
-      .single();
-      
-    if (findError || !chat) {
-      console.error("Chat not found or access denied:", findError);
-      return NextResponse.json(
-        { error: "Conversación no encontrada" },
-        { status: 404 }
-      );
-    }
-
-    // Delete the chat (this will cascade and delete associated messages) - use server client directly
-    const { error: deleteError } = await supabase
-      .from("chats")
-      .delete()
-      .eq("id", chatId)
-      .eq("user_id", user.id); // Double security check
-      
-    if (deleteError) {
-      console.error("Error deleting chat:", deleteError);
-      throw deleteError;
-    }
+    // Delete the chat using service (includes security checks)
+    await ChatsServer.deleteByUserAndId(user.id, chatId);
 
     return NextResponse.json({
       success: true,
@@ -183,7 +132,14 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     console.error("Error deleting chat:", error);
 
-    // Handle Supabase/database errors
+    // Handle service errors
+    if (error.message === "Conversación no encontrada") {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 404 }
+      );
+    }
+
     if (error.message?.includes("permission") || error.message?.includes("policy")) {
       return NextResponse.json(
         { error: "No tienes permisos para eliminar conversaciones" },

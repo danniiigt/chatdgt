@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/supabase-server";
-import { Chats } from "@/services";
+import { ChatsServer } from "@/services/Chats";
 
 interface NewChatRequest {
   title?: string;
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
 
     const { title, model } = body;
 
-    // Create new chat
-    const chat = await Chats.create({
+    // Create new chat using service
+    const chat = await ChatsServer.create({
       user_id: user.id,
       title: title || "Nueva conversación",
     });
