@@ -19,6 +19,7 @@ import {
   RESEND_COOLDOWN_SECONDS,
   RESEND_STORAGE_KEY_PREFIX,
 } from "@/lib/constants";
+import { LoaderCircle } from "lucide-react";
 
 export default function ConfirmEmailPage() {
   const [isResending, setIsResending] = useState(false);
@@ -188,14 +189,19 @@ export default function ConfirmEmailPage() {
               {isResending && (
                 <Icons.loader className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {isResending
-                ? t("auth.confirm-email.resending", "Enviando...")
-                : !canResend
-                  ? t("auth.confirm-email.wait", "Espera para reenviar")
-                  : t(
-                      "auth.confirm-email.resend",
-                      "Reenviar Correo de Verificación"
-                    )}
+              {isResending ? (
+                <>
+                  {t("auth.confirm-email.resending", "Enviando...")}
+                  <LoaderCircle className="size-4 animate-spin" />
+                </>
+              ) : !canResend ? (
+                t("auth.confirm-email.wait", "Espera para reenviar")
+              ) : (
+                t(
+                  "auth.confirm-email.resend",
+                  "Reenviar Correo de Verificación"
+                )
+              )}
             </Button>
 
             <Button variant="ghost" className="w-full" asChild>

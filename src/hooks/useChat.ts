@@ -189,13 +189,14 @@ export const useChat = (): UseChatState & UseChatActions => {
       } else {
         // For existing chats, replace temporary messages with real ones
         queryClient.setQueryData(["chat", chat.id], (old: Chat | undefined) => {
-          if (!old) return { ...chat, messages: [userMessage, assistantMessage] };
-          
+          if (!old)
+            return { ...chat, messages: [userMessage, assistantMessage] };
+
           // Remove temporary messages and add real ones
           const messagesWithoutTemp = old.messages.filter(
             (m) => !m.id.startsWith("temp-")
           );
-          
+
           return {
             ...chat,
             messages: [...messagesWithoutTemp, userMessage, assistantMessage],
@@ -213,7 +214,7 @@ export const useChat = (): UseChatState & UseChatActions => {
       if (wasOptimisticChat && currentChatId) {
         // Remove the failed optimistic chat
         queryClient.removeQueries({ queryKey: ["chat", currentChatId] });
-        
+
         // Clear current chat and navigate back
         setCurrentChatId(null);
         router.replace("/chat");
@@ -254,7 +255,7 @@ export const useChat = (): UseChatState & UseChatActions => {
         // Create optimistic chat
         const optimisticChat: Chat = {
           id: tempChatId,
-          title: message.trim().slice(0, 50) + (message.trim().length > 50 ? '...' : ''),
+          title: message.trim(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           messages: [optimisticUserMessage],
@@ -262,7 +263,7 @@ export const useChat = (): UseChatState & UseChatActions => {
 
         // Set the optimistic chat in cache
         queryClient.setQueryData(["chat", tempChatId], optimisticChat);
-        
+
         // Update current chat ID
         setCurrentChatId(tempChatId);
 
@@ -270,10 +271,10 @@ export const useChat = (): UseChatState & UseChatActions => {
         router.push(`/chat?chatId=${tempChatId}`);
 
         // Send the message to create real chat
-        sendMessageMutation.mutate({ 
-          message: message.trim(), 
+        sendMessageMutation.mutate({
+          message: message.trim(),
           chatId: undefined, // No chatId means create new chat
-          model 
+          model,
         });
 
         return;
@@ -281,27 +282,38 @@ export const useChat = (): UseChatState & UseChatActions => {
 
       // For existing chats, just send the message
       // The optimistic update will be handled in onMutate
-      sendMessageMutation.mutate({ message: message.trim(), chatId: targetChatId, model });
+      sendMessageMutation.mutate({
+        message: message.trim(),
+        chatId: targetChatId,
+        model,
+      });
     },
     [sendMessageMutation, currentChatId, queryClient, router, setCurrentChatId]
   );
 
-  const loadMessages = useCallback(async (chatId: string) => {
-    if (!chatId) return;
-    
-    // Check if we already have this chat data in cache (from optimistic update)
-    const existingChatData = queryClient.getQueryData<Chat>(["chat", chatId]);
-    
-    // If we have existing data and it has messages, don't trigger a new fetch
-    // This prevents overwriting data that was just set by onSuccess
-    if (existingChatData && existingChatData.messages && existingChatData.messages.length > 0) {
+  const loadMessages = useCallback(
+    async (chatId: string) => {
+      if (!chatId) return;
+
+      // Check if we already have this chat data in cache (from optimistic update)
+      const existingChatData = queryClient.getQueryData<Chat>(["chat", chatId]);
+
+      // If we have existing data and it has messages, don't trigger a new fetch
+      // This prevents overwriting data that was just set by onSuccess
+      if (
+        existingChatData &&
+        existingChatData.messages &&
+        existingChatData.messages.length > 0
+      ) {
+        setCurrentChatId(chatId);
+        return;
+      }
+
+      // Otherwise, proceed with normal loading
       setCurrentChatId(chatId);
-      return;
-    }
-    
-    // Otherwise, proceed with normal loading
-    setCurrentChatId(chatId);
-  }, [queryClient]);
+    },
+    [queryClient]
+  );
 
   const clearMessages = useCallback(() => {
     setCurrentChatId(null);
@@ -314,21 +326,24 @@ export const useChat = (): UseChatState & UseChatActions => {
 
   // Constants
   const isOptimisticChat = currentChatId?.startsWith("temp-chat-");
-  
+
   // Get current chat data - from query for real chats, from cache for optimistic chats
-  const currentChat = isOptimisticChat && currentChatId
-    ? queryClient.getQueryData<Chat>(["chat", currentChatId]) || null
-    : chatQuery.data || null;
-  
+  const currentChat =
+    isOptimisticChat && currentChatId
+      ? queryClient.getQueryData<Chat>(["chat", currentChatId]) || null
+      : chatQuery.data || null;
+
   // For optimistic chats, don't include chatQuery.isLoading to avoid persistent loading
   // Also check if we have an optimistic chat with only user message (waiting for AI response)
-  const hasOnlyUserMessage = isOptimisticChat && currentChat && 
-    currentChat.messages.length === 1 && 
+  const hasOnlyUserMessage =
+    isOptimisticChat &&
+    currentChat &&
+    currentChat.messages.length === 1 &&
     currentChat.messages[0].role === "user";
-  
-  const isLoading = isOptimisticChat 
-    ? (sendMessageMutation.isPending || hasOnlyUserMessage)
-    : (chatQuery.isLoading || sendMessageMutation.isPending);
+
+  const isLoading = isOptimisticChat
+    ? sendMessageMutation.isPending || hasOnlyUserMessage
+    : chatQuery.isLoading || sendMessageMutation.isPending;
   const error = chatQuery.error?.message || null;
 
   return {

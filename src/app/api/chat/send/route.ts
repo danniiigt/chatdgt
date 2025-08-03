@@ -29,8 +29,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("Authenticated user:", user.id, user.email);
-
     // Parse request body
     const body: SendMessageRequest = await request.json();
     const { message, chatId, model } = body;
@@ -60,15 +58,10 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Create new chat with auto-generated title
-      const title = message.slice(0, 50) + (message.length > 50 ? "..." : "");
-      console.log("Creating new chat for user:", user.id, "with title:", title);
-      
       chat = await ChatsServer.create({
         user_id: user.id,
-        title,
+        title: message.trim(),
       });
-      
-      console.log("Chat created successfully:", chat.id);
     }
 
     // Save user message using service
@@ -82,7 +75,7 @@ export async function POST(request: NextRequest) {
     // Get conversation history for context using service
     const conversationMessages = await MessagesServer.getByChatId(chat.id, {
       orderBy: "created_at",
-      ascending: true
+      ascending: true,
     });
 
     // Format messages for AI provider

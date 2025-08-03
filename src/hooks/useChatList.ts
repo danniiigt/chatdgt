@@ -6,7 +6,7 @@ import { useTranslate } from "@tolgee/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Types
-interface Chat {
+export interface Chat {
   id: string;
   title: string;
   created_at: string;

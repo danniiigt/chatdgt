@@ -1,13 +1,19 @@
+"use client";
+
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 interface AuthenticatedLayoutProps {
   children: React.ReactNode;
 }
 
-export default function AuthenticatedLayout({
+export const AuthenticatedLayout = ({
   children,
-}: AuthenticatedLayoutProps) {
+}: AuthenticatedLayoutProps) => {
+  // Custom hooks
+  useKeyboardShortcuts();
+
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full">
@@ -16,4 +22,6 @@ export default function AuthenticatedLayout({
       </div>
     </SidebarProvider>
   );
-}
+};
+
+export default AuthenticatedLayout;

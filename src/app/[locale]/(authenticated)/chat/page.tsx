@@ -35,6 +35,10 @@ const ChatPage = () => {
     [chatId, loadMessages, clearCurrentChat]
   );
 
+  useEffect(() => {
+    document.title = currentChat?.title || "ChatDGT";
+  }, [currentChat]);
+
   return (
     <div className="w-full h-full">
       <ChatBoxLayout

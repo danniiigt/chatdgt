@@ -1,10 +1,12 @@
 "use client";
 
-import { Share, Trash2, PanelLeftOpen } from "lucide-react";
+import { PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useTranslate } from "@tolgee/react";
 import { ChatInput } from "./ChatInput";
+import { ShareChatDialog } from "./ShareChatDialog";
+import { DeleteChatDialog } from "./DeleteChatDialog";
+import { ArchiveChatDialog } from "./ArchiveChatDialog";
 
 interface ChatBoxLayoutProps {
   children: React.ReactNode;
@@ -24,7 +26,6 @@ export const ChatBoxLayout = ({
   isLoading,
 }: ChatBoxLayoutProps) => {
   // Third party hooks
-  const { t } = useTranslate();
   const { open, setOpen } = useSidebar();
 
   // Helpers / Functions
@@ -32,30 +33,27 @@ export const ChatBoxLayout = ({
     setOpen(!open);
   };
 
-  const handleShareChat = () => {
-    // TODO: Implement share chat functionality
-    console.log("Share chat");
-  };
-
-  const handleDeleteChat = () => {
-    // TODO: Implement delete chat functionality
-    console.log("Delete chat");
-  };
-
   return (
     <div className="flex flex-col h-full w-full relative">
       {/* Top Bar */}
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between py-0 px-4 h-14 border-b 2xl:border-b-0 2xl:absolute 2xl:top-0 2xl:inset-x-0">
         {/* Left side - Sidebar toggle (only show when sidebar is closed) */}
         <div className="flex items-center">
           {!open && (
-            <Button variant="ghost" size="icon" onClick={handleToggleSidebar}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleToggleSidebar}
+              className="mr-1"
+            >
               <PanelLeftOpen
                 className="size-5 text-muted-foreground"
                 strokeWidth={1.25}
               />
             </Button>
           )}
+
+          <h3 className="text-lg font-medium">ChatDGT</h3>
         </div>
 
         {/* Center - Chat status indicator (optional) */}
@@ -64,24 +62,10 @@ export const ChatBoxLayout = ({
         </div>
 
         {/* Right side - Actions */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            onClick={handleShareChat}
-            title={t("chat.share", "Compartir conversacion")}
-          >
-            <Share className="h-4 w-4" />
-            <span>Compartir</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDeleteChat}
-            className="h-9 w-9 text-destructive hover:text-destructive"
-            title={t("chat.delete", "Eliminar chat")}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center gap-x-1.5">
+          <ShareChatDialog chatId={chatId} />
+          <ArchiveChatDialog chatId={chatId} />
+          <DeleteChatDialog chatId={chatId} />
         </div>
       </div>
 

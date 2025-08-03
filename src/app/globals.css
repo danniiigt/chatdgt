@@ -120,3 +120,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .group-2:hover .group-2-hover\:block {
+    display: block;
+  }
+  .group-2:hover .group-2-hover\:flex {
+    display: flex;
+  }
+}

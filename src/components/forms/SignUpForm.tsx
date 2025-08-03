@@ -21,6 +21,7 @@ import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { RESEND_STORAGE_KEY_PREFIX } from "@/lib/constants";
+import { LoaderCircle } from "lucide-react";
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -289,9 +290,14 @@ export function SignUpForm() {
             {isLoading && (
               <Icons.loader className="mr-2 h-4 w-4 animate-spin" />
             )}
-            {isLoading
-              ? t("auth.signup.loading", "Cargando...")
-              : t("auth.signup.submit", "Crear Cuenta")}
+            {isLoading ? (
+              <>
+                {t("auth.signup.loading", "Cargando...")}
+                <LoaderCircle className="size-4 animate-spin" />
+              </>
+            ) : (
+              t("auth.signup.submit", "Crear Cuenta")
+            )}
           </Button>
         </form>
         <div className="text-center text-sm text-muted-foreground">

@@ -54,7 +54,6 @@ export const ChatInput = ({
   const handleVoiceRecord = () => {
     setIsRecording(!isRecording);
     // TODO: Implement voice recording functionality
-    console.log("Voice recording:", !isRecording);
   };
 
   const handleModelChange = (modelId: string) => {

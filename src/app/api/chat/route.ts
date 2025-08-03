@@ -20,16 +20,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log("Authenticated user:", user.id, user.email);
-
     // Get pagination and search parameters from query string
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "1");
     const limit = Math.min(parseInt(url.searchParams.get("limit") || "20"), 50); // Max 50 chats per request
     const search = url.searchParams.get("search") || "";
     const offset = (page - 1) * limit;
-
-    console.log("Query params:", { page, limit, search, offset });
 
     // Get chats using service
     const chats = await ChatsServer.getByUserId(user.id, {
@@ -40,15 +36,14 @@ export async function GET(request: NextRequest) {
       ascending: false,
     });
 
-    console.log("Loaded chats:", chats?.length || 0);
-
     // Get total count using service
-    const totalCount = await ChatsServer.getCountByUserId(user.id, search || undefined);
+    const totalCount = await ChatsServer.getCountByUserId(
+      user.id,
+      search || undefined
+    );
     const totalPages = Math.ceil(totalCount / limit);
     const hasNextPage = page < totalPages;
     const hasPreviousPage = page > 1;
-
-    console.log("Pagination info:", { totalCount, totalPages, hasNextPage, hasPreviousPage });
 
     // Format response with additional metadata
     const formattedChats = chats.map((chat) => ({
@@ -73,12 +68,14 @@ export async function GET(request: NextRequest) {
         search: search || null,
       },
     });
-
   } catch (error: any) {
     console.error("Error loading user chats:", error);
 
     // Handle Supabase/database errors
-    if (error.message?.includes("permission") || error.message?.includes("policy")) {
+    if (
+      error.message?.includes("permission") ||
+      error.message?.includes("policy")
+    ) {
       return NextResponse.json(
         { error: "No tienes permisos para acceder a las conversaciones" },
         { status: 403 }
@@ -128,19 +125,18 @@ export async function DELETE(request: NextRequest) {
       success: true,
       message: "Conversación eliminada exitosamente",
     });
-
   } catch (error: any) {
     console.error("Error deleting chat:", error);
 
     // Handle service errors
     if (error.message === "Conversación no encontrada") {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 404 });
     }
 
-    if (error.message?.includes("permission") || error.message?.includes("policy")) {
+    if (
+      error.message?.includes("permission") ||
+      error.message?.includes("policy")
+    ) {
       return NextResponse.json(
         { error: "No tienes permisos para eliminar conversaciones" },
         { status: 403 }

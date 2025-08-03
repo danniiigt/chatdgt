@@ -277,7 +277,7 @@ export const MessageList = ({
   if (messages.length === 0 && isLoading) {
     return (
       <div className={cn("flex-1", className)}>
-        <div className="space-y-4 p-4">
+        <div className="space-y-4 p-4 pt-6">
           {/* Show skeleton messages while loading */}
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex gap-3 p-4 rounded-lg">
@@ -307,7 +307,7 @@ export const MessageList = ({
 
   return (
     <div className={cn("flex-1", className)}>
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-4 pt-6">
         {messages.map((message) => (
           <div key={message.id} className="group">
             <MessageBubble message={message} />

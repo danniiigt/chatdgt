@@ -60,7 +60,6 @@ export async function GET(request: NextRequest) {
             // No fallar el auth por esto, solo logear el error
           } else {
             const setupData = await setupResponse.json();
-            console.log("Usuario configurado exitosamente:", setupData.message);
           }
         } catch (setupError) {
           console.error("Error llamando al endpoint de setup:", setupError);
