@@ -14,9 +14,18 @@ export interface AIResponse {
   finishReason?: "stop" | "length" | "content_filter" | "tool_calls";
 }
 
+export interface AIStreamChunk {
+  content: string;
+  isComplete: boolean;
+  tokens?: number;
+  model?: string;
+  finishReason?: "stop" | "length" | "content_filter" | "tool_calls";
+}
+
 export interface AIProvider {
   name: string;
   generateResponse(messages: Message[], model?: string): Promise<AIResponse>;
+  generateStreamingResponse(messages: Message[], model?: string): AsyncGenerator<AIStreamChunk, void, unknown>;
   getSupportedModels(): string[];
   getDefaultModel(): string;
 }

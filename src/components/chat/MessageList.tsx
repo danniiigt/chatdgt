@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
+import { TypewriterText } from "@/components/ui/typewriter-text";
 import { useTranslate } from "@tolgee/react";
 
 // Types
@@ -23,6 +22,7 @@ interface Message {
 interface MessageListProps {
   messages: Message[];
   isLoading?: boolean;
+  isStreaming?: boolean;
   className?: string;
   onMessageSelect?: (message: string) => void;
 }
@@ -57,11 +57,16 @@ const MessageBubble = ({ message }: { message: Message }) => {
   // Constants
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
+  const isStreaming = message.id === "streaming-temp";
+
+  // Detect if this is a new message (created in the last 10 seconds)
+  const messageAge = Date.now() - new Date(message.created_at).getTime();
+  const isNewMessage = messageAge < 10000; // 10 seconds
 
   return (
     <div
       className={cn(
-        "flex gap-3 p-4 rounded-lg transition-colors",
+        "flex gap-3 p-4 rounded-lg transition-colors animate-in slide-in-from-bottom-2 fade-in duration-300",
         isUser && "bg-primary/5",
         isAssistant && "bg-transparent"
       )}
@@ -126,71 +131,16 @@ const MessageBubble = ({ message }: { message: Message }) => {
         {/* Message Text */}
         <div className="prose prose-sm max-w-none dark:prose-invert">
           {isAssistant ? (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                // Custom components for better styling
-                p: ({ children }) => (
-                  <p className="whitespace-pre-wrap break-words m-0 mb-5 last:mb-0">
-                    {children}
-                  </p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="my-5 ml-4 list-disc space-y-3">{children}</ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="my-5 ml-4 list-decimal space-y-3">
-                    {children}
-                  </ol>
-                ),
-                li: ({ children }) => (
-                  <li className="break-words">{children}</li>
-                ),
-                code: ({ children, className }) => {
-                  const isInline = !className;
-                  return isInline ? (
-                    <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">
-                      {children}
-                    </code>
-                  ) : (
-                    <code className={className}>{children}</code>
-                  );
-                },
-                pre: ({ children }) => (
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto my-5">
-                    {children}
-                  </pre>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-muted-foreground/20 pl-4 italic my-5">
-                    {children}
-                  </blockquote>
-                ),
-                strong: ({ children }) => (
-                  <strong className="font-semibold">{children}</strong>
-                ),
-                em: ({ children }) => <em className="italic">{children}</em>,
-                h1: ({ children }) => (
-                  <h1 className="text-lg font-semibold mt-6 mb-3 first:mt-0">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-base font-semibold mt-5 mb-3 first:mt-0">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-sm font-semibold mt-4 mb-2 first:mt-0">
-                    {children}
-                  </h3>
-                ),
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
+            <div className="relative">
+              <TypewriterText
+                text={message.content}
+                isComplete={!isStreaming}
+                shouldAnimate={isNewMessage && isAssistant} // Only animate new assistant messages
+                speed={10} // 10 chunks/sec for consistency
+              />
+            </div>
           ) : (
-            <p className="whitespace-pre-wrap break-words m-0">
+            <p className="whitespace-pre-wrap break-words m-0 animate-in fade-in duration-200">
               {message.content}
             </p>
           )}
@@ -259,6 +209,7 @@ const LoadingMessage = () => {
 export const MessageList = ({
   messages,
   isLoading,
+  isStreaming,
   className,
   onMessageSelect,
 }: MessageListProps) => {
@@ -314,7 +265,7 @@ export const MessageList = ({
           </div>
         ))}
 
-        {isLoading && <LoadingMessage />}
+        {isLoading && !isStreaming && <LoadingMessage />}
 
         {/* Scroll anchor */}
         <div ref={messagesEndRef} />

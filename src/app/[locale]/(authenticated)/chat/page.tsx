@@ -16,6 +16,7 @@ const ChatPage = () => {
   const {
     currentChat,
     isLoading,
+    isStreaming,
     error,
     loadMessages,
     sendMessage,
@@ -46,6 +47,7 @@ const ChatPage = () => {
           <ChatView
             messages={currentChat?.messages || []}
             isLoading={isLoading}
+            isStreaming={isStreaming}
             error={error}
             onMessageSelect={sendMessage}
           />

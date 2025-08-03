@@ -71,6 +71,7 @@ export const ChatInput = ({
             {/* Text input */}
             <div className="flex-1 max-h-32">
               <textarea
+                autoFocus
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}

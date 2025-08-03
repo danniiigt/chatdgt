@@ -9,6 +9,7 @@ interface SendMessageRequest {
   message: string;
   chatId?: string;
   model?: string;
+  stream?: boolean;
 }
 
 export async function POST(request: NextRequest) {
@@ -29,11 +30,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("Authenticated user:", user.id, user.email);
-
     // Parse request body
     const body: SendMessageRequest = await request.json();
-    const { message, chatId, model } = body;
+    const { message, chatId, model, stream = true } = body;
 
     if (!message?.trim()) {
       return NextResponse.json(
@@ -61,14 +60,11 @@ export async function POST(request: NextRequest) {
     } else {
       // Create new chat with auto-generated title
       const title = message.slice(0, 50) + (message.length > 50 ? "..." : "");
-      console.log("Creating new chat for user:", user.id, "with title:", title);
-      
+
       chat = await ChatsServer.create({
         user_id: user.id,
         title,
       });
-      
-      console.log("Chat created successfully:", chat.id);
     }
 
     // Save user message using service
@@ -82,7 +78,7 @@ export async function POST(request: NextRequest) {
     // Get conversation history for context using service
     const conversationMessages = await MessagesServer.getByChatId(chat.id, {
       orderBy: "created_at",
-      ascending: true
+      ascending: true,
     });
 
     // Format messages for AI provider
@@ -99,60 +95,179 @@ export async function POST(request: NextRequest) {
       content: message,
     });
 
-    // Generate AI response
+    // Handle streaming vs non-streaming responses
     const aiProvider = getAIProvider();
-    const aiResponse = await aiProvider.generateResponse(
-      aiMessages,
-      model || "gpt-4o-mini"
-    );
 
-    // Save AI response using service
-    const assistantMessage = await MessagesServer.create({
-      chat_id: chat.id,
-      content: aiResponse.content,
-      role: "assistant",
-      token_count: aiResponse.tokens,
-      model: aiResponse.model,
-    });
+    if (stream) {
+      // For streaming, we'll create a streaming response
+      const encoder = new TextEncoder();
 
-    // TODO: Update user usage when implementing limits
-    // await UserUsage.increment(1, aiResponse.tokens);
+      // Create a readable stream
+      const readable = new ReadableStream({
+        async start(controller) {
+          try {
+            let fullContent = "";
+            let totalTokens = 0;
+            let assistantMessageId = "";
 
-    // Update chat's updated_at timestamp using service
-    await ChatsServer.update(chat.id, {
-      updated_at: new Date().toISOString(),
-    });
+            // Send initial response with chat and user message info
+            const initialData = {
+              type: "initial",
+              chat: {
+                id: chat.id,
+                title: chat.title,
+                updated_at: chat.updated_at,
+              },
+              userMessage: {
+                id: userMessage.id,
+                content: userMessage.content,
+                role: userMessage.role,
+                created_at: userMessage.created_at,
+              },
+            };
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        chat: {
-          id: chat.id,
-          title: chat.title,
-          updated_at: chat.updated_at,
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(initialData)}\n\n`)
+            );
+
+            // Stream AI response
+            for await (const chunk of aiProvider.generateStreamingResponse(
+              aiMessages,
+              model || "gpt-4o-mini"
+            )) {
+              if (!chunk.isComplete) {
+                // Send content chunk
+                fullContent += chunk.content;
+                const chunkData = {
+                  type: "chunk",
+                  content: chunk.content,
+                  isComplete: false,
+                };
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify(chunkData)}\n\n`)
+                );
+              } else {
+                // Final chunk - save the complete message
+                totalTokens = chunk.tokens || 0;
+
+                const assistantMessage = await MessagesServer.create({
+                  chat_id: chat.id,
+                  content: fullContent,
+                  role: "assistant",
+                  token_count: totalTokens,
+                  model: chunk.model || model || "gpt-4o-mini",
+                });
+
+                assistantMessageId = assistantMessage.id;
+
+                // Update chat timestamp
+                await ChatsServer.update(chat.id, {
+                  updated_at: new Date().toISOString(),
+                });
+
+                // Send completion data
+                const completionData = {
+                  type: "complete",
+                  assistantMessage: {
+                    id: assistantMessage.id,
+                    content: assistantMessage.content,
+                    role: assistantMessage.role,
+                    created_at: assistantMessage.created_at,
+                    tokens: assistantMessage.token_count,
+                    model: assistantMessage.model,
+                  },
+                  usage: {
+                    tokensUsed: totalTokens,
+                    tokensRemaining: 10000, // Placeholder
+                    messagesRemaining: 100, // Placeholder
+                  },
+                };
+
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify(completionData)}\n\n`)
+                );
+                break;
+              }
+            }
+
+            controller.close();
+          } catch (error) {
+            console.error("Streaming error:", error);
+            const errorData = {
+              type: "error",
+              error: "Error al generar respuesta",
+            };
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(errorData)}\n\n`)
+            );
+            controller.close();
+          }
         },
-        userMessage: {
-          id: userMessage.id,
-          content: userMessage.content,
-          role: userMessage.role,
-          created_at: userMessage.created_at,
+      });
+
+      return new Response(readable, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Transfer-Encoding": "chunked",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
         },
-        assistantMessage: {
-          id: assistantMessage.id,
-          content: assistantMessage.content,
-          role: assistantMessage.role,
-          created_at: assistantMessage.created_at,
-          tokens: assistantMessage.token_count,
-          model: assistantMessage.model,
+      });
+    } else {
+      // Non-streaming response (original behavior)
+      const aiResponse = await aiProvider.generateResponse(
+        aiMessages,
+        model || "gpt-4o-mini"
+      );
+
+      // Save AI response using service
+      const assistantMessage = await MessagesServer.create({
+        chat_id: chat.id,
+        content: aiResponse.content,
+        role: "assistant",
+        token_count: aiResponse.tokens,
+        model: aiResponse.model,
+      });
+
+      // TODO: Update user usage when implementing limits
+      // await UserUsage.increment(1, aiResponse.tokens);
+
+      // Update chat's updated_at timestamp using service
+      await ChatsServer.update(chat.id, {
+        updated_at: new Date().toISOString(),
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          chat: {
+            id: chat.id,
+            title: chat.title,
+            updated_at: chat.updated_at,
+          },
+          userMessage: {
+            id: userMessage.id,
+            content: userMessage.content,
+            role: userMessage.role,
+            created_at: userMessage.created_at,
+          },
+          assistantMessage: {
+            id: assistantMessage.id,
+            content: assistantMessage.content,
+            role: assistantMessage.role,
+            created_at: assistantMessage.created_at,
+            tokens: assistantMessage.token_count,
+            model: assistantMessage.model,
+          },
+          usage: {
+            tokensUsed: aiResponse.tokens,
+            // TODO: Add remaining tokens/messages when implementing limits
+            tokensRemaining: 10000, // Placeholder
+            messagesRemaining: 100, // Placeholder
+          },
         },
-        usage: {
-          tokensUsed: aiResponse.tokens,
-          // TODO: Add remaining tokens/messages when implementing limits
-          tokensRemaining: 10000, // Placeholder
-          messagesRemaining: 100, // Placeholder
-        },
-      },
-    });
+      });
+    }
   } catch (error: any) {
     console.error("Error in chat send:", error);
 

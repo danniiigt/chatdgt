@@ -15,11 +15,12 @@ interface Message {
 interface ChatViewProps {
   messages: Message[];
   isLoading: boolean;
+  isStreaming?: boolean;
   error: string | null;
   onMessageSelect?: (message: string) => void;
 }
 
-export const ChatView = ({ messages, isLoading, error, onMessageSelect }: ChatViewProps) => {
+export const ChatView = ({ messages, isLoading, isStreaming, error, onMessageSelect }: ChatViewProps) => {
   // Conditional rendering
   if (error) {
     return (
@@ -36,6 +37,7 @@ export const ChatView = ({ messages, isLoading, error, onMessageSelect }: ChatVi
     <MessageList 
       messages={messages} 
       isLoading={isLoading}
+      isStreaming={isStreaming}
       className="flex-1"
       onMessageSelect={onMessageSelect}
     />
