@@ -64,7 +64,7 @@ export const ChatInput = ({
     <div className="w-full max-w-4xl mx-auto p-4 pb-8 pt-0">
       {/* Chat input box */}
       <div className="relative">
-        <div className="flex flex-col p-4 border border-gray-200 rounded-4xl shadow-xs bg-white dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col p-4 border border-gray-200 rounded-4xl shadow-xs bg-white dark:bg-foreground/5 dark:border-foreground/10">
           {/* Top row - Input and buttons */}
           <div className="flex items-center gap-3 flex-1">
             {/* Text input */}

@@ -27,17 +27,41 @@ import { KeyboardShortcut } from "../ui/keyboard-shortcut";
 import { useChatList } from "@/hooks/useChatList";
 import { Chats } from "./Chats";
 import Link from "next/link";
+import { useUser } from "@supabase/auth-helpers-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const ChatSidebar = () => {
   // Third party hooks
   const { t } = useTranslate();
   const { toggleSidebar } = useSidebar();
+  const user = useUser();
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
 
   // Constants
   const hasChats = chats.length > 0;
+  const fullName = user?.user_metadata?.full_name || "";
+  const avatarUrl = user?.user_metadata?.avatar_url || "";
+  const userEmail = user?.email || "";
+  const userInitials = fullName
+    ? fullName
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+    : "U";
+  const randomColors = [
+    "#0093E9", // #0093E9
+    "#00B4DB", // #00B4DB
+    "#6A11CB", // #6A11CB
+    "#833ab4", // #833ab4
+    "#f5851f", // #f5851f
+    "#f44336", // #f44336
+    "#f57c00", // #f57c00
+  ];
+  const randomColor =
+    randomColors[Math.floor(Math.random() * randomColors.length)];
 
   return (
     <Sidebar className="w-64 border-r">
@@ -57,7 +81,6 @@ export const ChatSidebar = () => {
           <SidebarMenuButton
             asChild
             className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
-            disabled={isLoading}
           >
             <Link href="/chat" prefetch={true}>
               <div className="flex items-center gap-x-2 w-full pr-2">
@@ -72,17 +95,22 @@ export const ChatSidebar = () => {
               </div>
             </Link>
           </SidebarMenuButton>
-          <SidebarMenuButton className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2">
-            <div className="flex items-center gap-x-2 w-full pr-2">
-              <Archive className="size-4" />
-              <span>{t("chat.archived-chats", "Archivados")}</span>
+          <SidebarMenuButton
+            asChild
+            className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
+          >
+            <Link href="/archived-chats" prefetch={true}>
+              <div className="flex items-center gap-x-2 w-full pr-2">
+                <Archive className="size-4" />
+                <span>{t("chat.archived-chats", "Archivados")}</span>
 
-              <div className="flex-auto"></div>
+                <div className="flex-auto"></div>
 
-              <div className="hidden group-2-hover:block ml-auto">
-                <KeyboardShortcut keys={["shift", "cmd", "E"]} />
+                <div className="hidden group-2-hover:block ml-auto">
+                  <KeyboardShortcut keys={["shift", "cmd", "E"]} />
+                </div>
               </div>
-            </div>
+            </Link>
           </SidebarMenuButton>
           <SidebarMenuButton className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2">
             <div className="flex items-center gap-x-2 w-full pr-2">
@@ -128,12 +156,33 @@ export const ChatSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4">
+      <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="w-full justify-start gap-2">
-              <Settings className="h-4 w-4" />
-              {t("chat.settings", "Configuración")}
+            <SidebarMenuButton
+              asChild
+              className="w-full justify-start gap-2 py-6 px-2"
+            >
+              <Link href="/settings">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={avatarUrl} alt={fullName || "Avatar"} />
+                  <AvatarFallback
+                    style={{
+                      backgroundColor: randomColor,
+                    }}
+                    className="text-sm text-white"
+                  >
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div>
+                  <h3>{t("chat.settings", "Configuración")}</h3>
+                  <h4 className="text-muted-foreground text-xs truncate">
+                    {userEmail}
+                  </h4>
+                </div>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

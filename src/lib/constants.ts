@@ -667,3 +667,16 @@ export const suggestedMessages: SuggestedMessage[] = [
     keyFallback: "¿Cómo hacer un café perfecto en casa?",
   },
 ];
+
+export type Model = {
+  id: string;
+  name: string;
+};
+
+export const DEFAULT_MODEL = "gpt-4o-mini";
+
+export const AVAILABLE_MODELS: Model[] = [
+  { id: "gpt-4o-mini", name: "GPT-4o Mini" },
+  { id: "gpt-4o", name: "GPT-4o" },
+  { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo" },
+];

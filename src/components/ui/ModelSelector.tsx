@@ -9,12 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// Types
-interface Model {
-  id: string;
-  name: string;
-}
+import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/constants";
 
 interface ModelSelectorProps {
   onModelChange: (modelId: string) => void;
@@ -23,18 +18,11 @@ interface ModelSelectorProps {
 }
 
 const STORAGE_KEY = "chatdgt-selected-model";
-const DEFAULT_MODEL = "gpt-4o-mini";
 
-const AVAILABLE_MODELS: Model[] = [
-  { id: "gpt-4o-mini", name: "GPT-4o Mini" },
-  { id: "gpt-4o", name: "GPT-4o" },
-  { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo" },
-];
-
-export const ModelSelector = ({ 
-  onModelChange, 
-  disabled = false, 
-  className = "" 
+export const ModelSelector = ({
+  onModelChange,
+  disabled = false,
+  className = "",
 }: ModelSelectorProps) => {
   // State
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL);
@@ -51,7 +39,10 @@ export const ModelSelector = ({
 
       try {
         const storedModel = localStorage.getItem(STORAGE_KEY);
-        if (storedModel && AVAILABLE_MODELS.some(model => model.id === storedModel)) {
+        if (
+          storedModel &&
+          AVAILABLE_MODELS.some((model) => model.id === storedModel)
+        ) {
           setSelectedModel(storedModel);
           onModelChange(storedModel);
         } else {
@@ -82,7 +73,9 @@ export const ModelSelector = ({
   };
 
   // Constants
-  const currentModel = AVAILABLE_MODELS.find(model => model.id === selectedModel) || AVAILABLE_MODELS[0];
+  const currentModel =
+    AVAILABLE_MODELS.find((model) => model.id === selectedModel) ||
+    AVAILABLE_MODELS[0];
 
   // Prevent hydration mismatch by not rendering until client-side
   if (!isClient) {
@@ -115,9 +108,7 @@ export const ModelSelector = ({
           <DropdownMenuItem
             key={model.id}
             onClick={() => handleModelChange(model.id)}
-            className={
-              model.id === selectedModel ? "bg-muted font-medium" : ""
-            }
+            className={model.id === selectedModel ? "bg-muted font-medium" : ""}
           >
             {model.name}
           </DropdownMenuItem>

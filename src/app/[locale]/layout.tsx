@@ -5,6 +5,8 @@ import { LOCALE, LOCALES } from "@/lib/constants";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthHandler } from "@/components/auth/AuthHandler";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { SupabaseAuthProvider } from "@/providers/SupabaseAuthProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -23,11 +25,20 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <div>
       <TolgeeNextProvider locales={locales} locale={locale}>
-        <QueryProvider>
-          <AuthHandler />
-          {children}
-          <Toaster />
-        </QueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SupabaseAuthProvider>
+            <QueryProvider>
+              <AuthHandler />
+              {children}
+              <Toaster />
+            </QueryProvider>
+          </SupabaseAuthProvider>
+        </ThemeProvider>
       </TolgeeNextProvider>
     </div>
   );
