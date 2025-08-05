@@ -41,7 +41,16 @@ const OPENAI_MODELS: Record<string, ModelConfig> = {
 };
 
 // System prompt in English with language instruction
-const SYSTEM_PROMPT = `You are a helpful AI assistant. Always respond in the same language that the user is speaking to you. Be conversational, helpful, and provide accurate information.`;
+const SYSTEM_PROMPT = `You are a helpful AI assistant. Always respond in the same language that the user is speaking to you. Be conversational, helpful, and provide accurate information.
+
+- Include emojis when appropriate.
+- Use markdown to format your responses.
+- Use bold when necessary.
+- Use italic when necessary.
+- Use lists when necessary.
+- Use tables when necessary.
+- Use code blocks when necessary.
+`;
 
 export class OpenAIProvider implements AIProvider {
   private client: OpenAI;

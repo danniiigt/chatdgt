@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -7,6 +8,7 @@ import { ChatInput } from "./ChatInput";
 import { ShareChatDialog } from "./ShareChatDialog";
 import { DeleteChatDialog } from "./DeleteChatDialog";
 import { ArchiveChatDialog } from "./ArchiveChatDialog";
+import { ScrollToBottomButton } from "@/components/chat/ScrollToBottomButton";
 
 interface ChatBoxLayoutProps {
   children: React.ReactNode;
@@ -27,6 +29,9 @@ export const ChatBoxLayout = ({
 }: ChatBoxLayoutProps) => {
   // Third party hooks
   const { open, setOpen } = useSidebar();
+
+  // Refs
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Helpers / Functions
   const handleToggleSidebar = () => {
@@ -72,7 +77,7 @@ export const ChatBoxLayout = ({
       {/* Main content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto">
+        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
           <div className="flex-1 w-full h-full max-w-4xl mx-auto">
             {children}
           </div>
@@ -87,6 +92,11 @@ export const ChatBoxLayout = ({
           />
         </div>
       </div>
+
+      {/* Scroll to bottom button */}
+      {chatId && (
+        <ScrollToBottomButton scrollContainerRef={scrollContainerRef} />
+      )}
     </div>
   );
 };
