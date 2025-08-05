@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoaderCircle, Upload } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/supabase";
 import { toast } from "sonner";
+import { randomColor } from "@/lib/constants";
 
 export const ProfileTab = () => {
   // Third party hooks
@@ -158,7 +159,14 @@ export const ProfileTab = () => {
         <div className="flex items-center space-x-4">
           <Avatar className="h-20 w-20">
             <AvatarImage src={avatarUrl} alt={fullName || "Avatar"} />
-            <AvatarFallback className="text-lg">{userInitials}</AvatarFallback>
+            <AvatarFallback
+              style={{
+                backgroundColor: randomColor,
+              }}
+              className="text-white text-lg"
+            >
+              {userInitials}
+            </AvatarFallback>
           </Avatar>
           <div>
             <Label htmlFor="avatar-upload" className="cursor-pointer">

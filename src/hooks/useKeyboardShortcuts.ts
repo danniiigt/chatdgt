@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchChat } from "./useSearchChat";
 
 export const useKeyboardShortcuts = () => {
   // Third party hooks
   const router = useRouter();
+
+  // State
+  const { setIsOpen } = useSearchChat();
 
   // Effects
   useEffect(
@@ -21,10 +25,10 @@ export const useKeyboardShortcuts = () => {
           return;
         }
 
-        // Cmd/Ctrl + K - Search (placeholder for future implementation)
+        // Cmd/Ctrl + K - Open search dialog
         if (cmdKey && event.key.toLowerCase() === "k") {
           event.preventDefault();
-          // TODO: Implement search functionality
+          setIsOpen(true);
           return;
         }
 

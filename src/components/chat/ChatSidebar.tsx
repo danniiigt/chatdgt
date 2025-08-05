@@ -26,9 +26,12 @@ import { Button } from "../ui/button";
 import { KeyboardShortcut } from "../ui/keyboard-shortcut";
 import { useChatList } from "@/hooks/useChatList";
 import { Chats } from "./Chats";
+import { ChatSearchDialog } from "./ChatSearchDialog";
 import Link from "next/link";
 import { useUser } from "@supabase/auth-helpers-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useSearchChat } from "@/hooks/useSearchChat";
+import { randomColor } from "@/lib/constants";
 
 export const ChatSidebar = () => {
   // Third party hooks
@@ -38,6 +41,7 @@ export const ChatSidebar = () => {
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
+  const { isOpen, setIsOpen } = useSearchChat();
 
   // Constants
   const hasChats = chats.length > 0;
@@ -51,17 +55,6 @@ export const ChatSidebar = () => {
         .join("")
         .toUpperCase()
     : "U";
-  const randomColors = [
-    "#0093E9", // #0093E9
-    "#00B4DB", // #00B4DB
-    "#6A11CB", // #6A11CB
-    "#833ab4", // #833ab4
-    "#f5851f", // #f5851f
-    "#f44336", // #f44336
-    "#f57c00", // #f57c00
-  ];
-  const randomColor =
-    randomColors[Math.floor(Math.random() * randomColors.length)];
 
   return (
     <Sidebar className="w-64 border-r">
@@ -112,7 +105,10 @@ export const ChatSidebar = () => {
               </div>
             </Link>
           </SidebarMenuButton>
-          <SidebarMenuButton className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2">
+          <SidebarMenuButton
+            className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
+            onClick={() => setIsOpen(true)}
+          >
             <div className="flex items-center gap-x-2 w-full pr-2">
               <Search className="size-4" />
               <span>{t("chat.search-chat", "Buscar")}</span>
@@ -187,6 +183,8 @@ export const ChatSidebar = () => {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
+      <ChatSearchDialog />
     </Sidebar>
   );
 };

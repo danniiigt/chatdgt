@@ -680,3 +680,15 @@ export const AVAILABLE_MODELS: Model[] = [
   { id: "gpt-4o", name: "GPT-4o" },
   { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo" },
 ];
+
+export const randomColors = [
+  "#0093E9", // #0093E9
+  "#00B4DB", // #00B4DB
+  "#6A11CB", // #6A11CB
+  "#833ab4", // #833ab4
+  "#f5851f", // #f5851f
+  "#f44336", // #f44336
+  "#f57c00", // #f57c00
+];
+export const randomColor =
+  randomColors[Math.floor(Math.random() * randomColors.length)];

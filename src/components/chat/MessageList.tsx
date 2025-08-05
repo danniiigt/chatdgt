@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { useTranslate } from "@tolgee/react";
+import { useUser } from "@supabase/auth-helpers-react";
+import { randomColor } from "@/lib/constants";
 
 // Types
 interface Message {
@@ -30,6 +32,7 @@ interface MessageListProps {
 const MessageBubble = ({ message }: { message: Message }) => {
   // Third party hooks
   const { t } = useTranslate();
+  const user = useUser();
 
   // State
   const [isCopied, setIsCopied] = useState(false);
@@ -57,6 +60,16 @@ const MessageBubble = ({ message }: { message: Message }) => {
   // Constants
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
+  const fullName = user?.user_metadata?.full_name || "";
+  const avatarUrl = user?.user_metadata?.avatar_url || "";
+  const userEmail = user?.email || "";
+  const userInitials = fullName
+    ? fullName
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+    : "U";
 
   return (
     <div
@@ -70,9 +83,14 @@ const MessageBubble = ({ message }: { message: Message }) => {
       <Avatar className="h-8 w-8 shrink-0">
         {isUser ? (
           <>
-            <AvatarImage src="/user-avatar.png" alt="User" />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              U
+            <AvatarImage src={avatarUrl} alt={fullName || "Avatar"} />
+            <AvatarFallback
+              style={{
+                backgroundColor: randomColor,
+              }}
+              className="bg-primary text-primary-foreground text-xs"
+            >
+              {userInitials}
             </AvatarFallback>
           </>
         ) : (
