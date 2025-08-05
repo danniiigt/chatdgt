@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +14,7 @@ import {
 import { useTranslate } from "@tolgee/react";
 import { Share, LoaderCircle, Info, Link2, Copy, Check } from "lucide-react";
 import { Icons } from "@/components/ui/icons";
+import { toast } from "sonner";
 
 interface ShareChatDialogProps {
   chatId?: string;
@@ -34,7 +36,6 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
 
   // State
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState<string>("");
   const [isShared, setIsShared] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -42,12 +43,9 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
   // Constants
   const hideShareChat = !chatId;
 
-  // Helpers / Functions
-  const handleCreateShare = async () => {
-    if (!chatId) return;
-
-    setIsLoading(true);
-    try {
+  // Data fetching
+  const createShareMutation = useMutation({
+    mutationFn: async (chatId: string) => {
       const response = await fetch(`/api/chat/${chatId}/share`, {
         method: "POST",
       });
@@ -60,14 +58,24 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
       }
 
       const data: ShareResponse = await response.json();
-      setShareUrl(data.data.shareUrl);
+      return data.data;
+    },
+    onSuccess: (data) => {
+      setShareUrl(data.shareUrl);
       setIsShared(true);
-    } catch (error) {
+    },
+    onError: (error: Error) => {
       console.error("Error creating share link:", error);
-      // TODO: Show error toast
-    } finally {
-      setIsLoading(false);
-    }
+      toast.error(
+        t("chat.share-dialog.error", "Error al crear el enlace compartido")
+      );
+    },
+  });
+
+  // Helpers / Functions
+  const handleCreateShare = () => {
+    if (!chatId) return;
+    createShareMutation.mutate(chatId);
   };
 
   const handleCopyLink = async () => {
@@ -174,10 +182,10 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
               {/* Create link button */}
               <Button
                 onClick={handleCreateShare}
-                disabled={isLoading}
+                disabled={createShareMutation.isPending}
                 className="w-full"
               >
-                {isLoading ? (
+                {createShareMutation.isPending ? (
                   <>
                     <LoaderCircle className="mr-1 h-4 w-4 animate-spin" />
                     {t("chat.share-dialog.create-link", "Crear enlace")}

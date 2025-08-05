@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslate } from "@tolgee/react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeleteChatDialogProps {
   chatId?: string;
@@ -27,16 +28,11 @@ export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
   const queryClient = useQueryClient();
 
   // State
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Helpers / Functions
-  const handleDeleteChat = async () => {
-    if (!chatId) return;
-
-    setIsDeleting(true);
-
-    try {
+  // Data fetching
+  const deleteChatMutation = useMutation({
+    mutationFn: async (chatId: string) => {
       const response = await fetch(`/api/chat/${chatId}`, {
         method: "DELETE",
       });
@@ -46,17 +42,32 @@ export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
         throw new Error(errorData.error || "Error al eliminar la conversación");
       }
 
+      return response.json();
+    },
+    onSuccess: () => {
       // Invalidate chat list query to update sidebar
       queryClient.invalidateQueries({ queryKey: ["chats"] });
-
+      
       // Close dialog and redirect to homepage
       setIsOpen(false);
       router.push("/");
-    } catch (error) {
+      
+      toast.success(
+        t("chat.delete.success", "Conversación eliminada correctamente")
+      );
+    },
+    onError: (error: Error) => {
       console.error("Error deleting chat:", error);
-    } finally {
-      setIsDeleting(false);
-    }
+      toast.error(
+        t("chat.delete.error", "Error al eliminar la conversación")
+      );
+    },
+  });
+
+  // Helpers / Functions
+  const handleDeleteChat = () => {
+    if (!chatId) return;
+    deleteChatMutation.mutate(chatId);
   };
 
   // Constants
@@ -92,16 +103,16 @@ export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
           <Button
             variant="outline"
             onClick={() => setIsOpen(false)}
-            disabled={isDeleting}
+            disabled={deleteChatMutation.isPending}
           >
             {t("common.cancel", "Cancelar")}
           </Button>
           <Button
             variant="destructive"
             onClick={handleDeleteChat}
-            disabled={isDeleting}
+            disabled={deleteChatMutation.isPending}
           >
-            {isDeleting ? (
+            {deleteChatMutation.isPending ? (
               <>
                 {t("chat.delete.deleting", "Eliminando")}
                 <LoaderCircle className="size-4 animate-spin" />

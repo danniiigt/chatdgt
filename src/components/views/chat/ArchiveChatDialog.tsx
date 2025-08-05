@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslate } from "@tolgee/react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { Archive, LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 
 interface ArchiveChatDialogProps {
   chatId?: string;
@@ -27,16 +28,11 @@ export const ArchiveChatDialog = ({ chatId }: ArchiveChatDialogProps) => {
   const queryClient = useQueryClient();
 
   // State
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Helpers / Functions
-  const handleArchiveChat = async () => {
-    if (!chatId) return;
-
-    setIsLoading(true);
-
-    try {
+  // Data fetching
+  const archiveChatMutation = useMutation({
+    mutationFn: async (chatId: string) => {
       const response = await fetch(`/api/chat/${chatId}?action=archive`, {
         method: "DELETE",
       });
@@ -46,17 +42,32 @@ export const ArchiveChatDialog = ({ chatId }: ArchiveChatDialogProps) => {
         throw new Error(errorData.error || "Error al archivar la conversación");
       }
 
+      return response.json();
+    },
+    onSuccess: () => {
       // Invalidate chat list query to update sidebar
       queryClient.invalidateQueries({ queryKey: ["chats"] });
-
+      
       // Close dialog and redirect to homepage
       setIsOpen(false);
       router.push("/");
-    } catch (error) {
+      
+      toast.success(
+        t("chat.archive.success", "Conversación archivada correctamente")
+      );
+    },
+    onError: (error: Error) => {
       console.error("Error archiving chat:", error);
-    } finally {
-      setIsLoading(false);
-    }
+      toast.error(
+        t("chat.archive.error", "Error al archivar la conversación")
+      );
+    },
+  });
+
+  // Helpers / Functions
+  const handleArchiveChat = () => {
+    if (!chatId) return;
+    archiveChatMutation.mutate(chatId);
   };
 
   // Constants
@@ -92,12 +103,12 @@ export const ArchiveChatDialog = ({ chatId }: ArchiveChatDialogProps) => {
           <Button
             variant="outline"
             onClick={() => setIsOpen(false)}
-            disabled={isLoading}
+            disabled={archiveChatMutation.isPending}
           >
             {t("common.cancel", "Cancelar")}
           </Button>
-          <Button onClick={handleArchiveChat} disabled={isLoading}>
-            {isLoading ? (
+          <Button onClick={handleArchiveChat} disabled={archiveChatMutation.isPending}>
+            {archiveChatMutation.isPending ? (
               <>
                 {t("chat.archive.archiving", "Archivando")}
                 <LoaderCircle className="size-4 animate-spin" />

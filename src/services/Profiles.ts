@@ -250,4 +250,79 @@ export const Profiles = {
 
     return profile;
   },
+
+  /**
+   * Actualizar perfil completo y sincronizar con auth
+   */
+  async updateProfileWithAuth(data: {
+    full_name?: string;
+    avatar_url?: string;
+  }): Promise<{ profile: Profile; user: any }> {
+    const supabase = createClientSupabase();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("Usuario no autenticado");
+
+    // Actualizar perfil en BD
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .upsert({
+        id: user.id,
+        email: user.email!,
+        full_name: data.full_name || null,
+        avatar_url: data.avatar_url || null,
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (profileError) throw profileError;
+
+    // Actualizar user_metadata en Auth
+    const { error: userError, data: updatedUser } = await supabase.auth.updateUser({
+      data: {
+        full_name: data.full_name || null,
+        avatar_url: data.avatar_url || null,
+      },
+    });
+
+    if (userError) throw userError;
+
+    return { profile, user: updatedUser.user };
+  },
+
+  /**
+   * Subir avatar y actualizar perfil
+   */
+  async uploadAvatar(file: File): Promise<{ profile: Profile; user: any; avatarUrl: string }> {
+    const supabase = createClientSupabase();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("Usuario no autenticado");
+
+    // Subir archivo
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+    const filePath = `${user.id}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+    const avatarUrl = data.publicUrl;
+
+    // Actualizar perfil con nuevo avatar
+    const result = await this.updateProfileWithAuth({
+      avatar_url: avatarUrl,
+    });
+
+    return { ...result, avatarUrl };
+  },
 };

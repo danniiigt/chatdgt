@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,9 +14,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useTranslate } from "@tolgee/react";
-import { useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle, Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 interface EditChatDialogProps {
   chatId: string;
@@ -31,23 +32,18 @@ export const EditChatDialog = ({
   const queryClient = useQueryClient();
 
   // State
-  const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState(currentTitle);
 
-  // Helpers / Functions
-  const handleEditChat = async () => {
-    if (!chatId || !title.trim()) return;
-
-    setIsEditing(true);
-
-    try {
-      const response = await fetch(`/api/chat/${chatId}`, {
+  // Data fetching
+  const updateChatMutation = useMutation({
+    mutationFn: async (data: { chatId: string; title: string }) => {
+      const response = await fetch(`/api/chat/${data.chatId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title: title.trim() }),
+        body: JSON.stringify({ title: data.title }),
       });
 
       if (!response.ok) {
@@ -55,17 +51,32 @@ export const EditChatDialog = ({
         throw new Error(errorData.error || "Error al actualizar el título");
       }
 
+      return response.json();
+    },
+    onSuccess: () => {
       // Invalidate chat list query to update sidebar
       queryClient.invalidateQueries({ queryKey: ["chats"] });
       queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
-
+      
       // Close dialog
       setIsOpen(false);
-    } catch (error) {
+      
+      toast.success(
+        t("chat.edit.success", "Título actualizado correctamente")
+      );
+    },
+    onError: (error: Error) => {
       console.error("Error updating chat title:", error);
-    } finally {
-      setIsEditing(false);
-    }
+      toast.error(
+        t("chat.edit.error", "Error al actualizar el título")
+      );
+    },
+  });
+
+  // Helpers / Functions
+  const handleEditChat = () => {
+    if (!chatId || !title.trim()) return;
+    updateChatMutation.mutate({ chatId, title: title.trim() });
   };
 
   const handleCancel = () => {
@@ -113,7 +124,7 @@ export const EditChatDialog = ({
                 "chat.title.placeholder",
                 "Escribe el nombre del chat..."
               )}
-              disabled={isEditing}
+              disabled={updateChatMutation.isPending}
               maxLength={100}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -125,16 +136,16 @@ export const EditChatDialog = ({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel} disabled={isEditing}>
+          <Button variant="outline" onClick={handleCancel} disabled={updateChatMutation.isPending}>
             {t("common.cancel", "Cancelar")}
           </Button>
           <Button
             onClick={handleEditChat}
             disabled={
-              isEditing || !title.trim() || title.trim() === currentTitle
+              updateChatMutation.isPending || !title.trim() || title.trim() === currentTitle
             }
           >
-            {isEditing ? (
+            {updateChatMutation.isPending ? (
               <>
                 {t("chat.edit.saving", "Guardando")}
                 <LoaderCircle className="size-4 animate-spin" />
