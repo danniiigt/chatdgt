@@ -3,14 +3,22 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
 import { useTranslate } from "@tolgee/react";
 import { useUser } from "@supabase/auth-helpers-react";
-import { randomColor } from "@/lib/constants";
+import { randomColor, LOCALE } from "@/lib/constants";
+import {
+  Check,
+  CheckCheck,
+  Copy,
+  LoaderCircle,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 
 // Types
 interface Message {
@@ -29,10 +37,19 @@ interface MessageListProps {
   onMessageSelect?: (message: string) => void;
 }
 
-const MessageBubble = ({ message }: { message: Message }) => {
+const MessageBubble = ({
+  message,
+  currentSpeakingId,
+  setCurrentSpeakingId,
+}: {
+  message: Message;
+  currentSpeakingId: string | null;
+  setCurrentSpeakingId: (id: string | null) => void;
+}) => {
   // Third party hooks
   const { t } = useTranslate();
   const user = useUser();
+  const pathname = usePathname();
 
   // State
   const [isCopied, setIsCopied] = useState(false);
@@ -57,12 +74,53 @@ const MessageBubble = ({ message }: { message: Message }) => {
     });
   };
 
+  const getSpeechLang = (locale: string) => {
+    const speechLangMap: Record<string, string> = {
+      [LOCALE.ES]: "es-ES",
+      [LOCALE.EN]: "en-US",
+    };
+    return speechLangMap[locale] || "es-ES";
+  };
+
+  const speakText = async (text: string) => {
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported");
+      return;
+    }
+
+    const isSpeaking = currentSpeakingId === message.id;
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setCurrentSpeakingId(null);
+      return;
+    }
+
+    // Cancel any other speaking message
+    if (currentSpeakingId) {
+      window.speechSynthesis.cancel();
+    }
+
+    const currentLocale = pathname.split("/")[1] || LOCALE.ES;
+    const speechLang = getSpeechLang(currentLocale);
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = speechLang;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+
+    utterance.onstart = () => setCurrentSpeakingId(message.id);
+    utterance.onend = () => setCurrentSpeakingId(null);
+    utterance.onerror = () => setCurrentSpeakingId(null);
+
+    window.speechSynthesis.speak(utterance);
+  };
+
   // Constants
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const fullName = user?.user_metadata?.full_name || "";
   const avatarUrl = user?.user_metadata?.avatar_url || "";
-  const userEmail = user?.email || "";
   const userInitials = fullName
     ? fullName
         .split(" ")
@@ -125,6 +183,25 @@ const MessageBubble = ({ message }: { message: Message }) => {
 
           {/* Actions */}
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            {isAssistant && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0"
+                onClick={() => speakText(message.content)}
+                title={
+                  currentSpeakingId === message.id
+                    ? t("chat.message.stopSpeaking", "Parar reproducción")
+                    : t("chat.message.speak", "Escuchar mensaje")
+                }
+              >
+                {currentSpeakingId === message.id ? (
+                  <VolumeX className="h-3 w-3 text-blue-600" />
+                ) : (
+                  <Volume2 className="h-3 w-3" />
+                )}
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -133,9 +210,9 @@ const MessageBubble = ({ message }: { message: Message }) => {
               title={t("chat.message.copy", "Copiar mensaje")}
             >
               {isCopied ? (
-                <Icons.check className="h-3 w-3 text-green-600" />
+                <CheckCheck className="h-3 w-3" />
               ) : (
-                <Icons.copy className="h-3 w-3" />
+                <Copy className="h-3 w-3" />
               )}
             </Button>
           </div>
@@ -250,7 +327,7 @@ const LoadingMessage = () => {
           <span className="text-sm font-medium">
             {t("chat.message.assistant", "Asistente")}
           </span>
-          <Icons.loader className="h-3 w-3 animate-spin" />
+          <LoaderCircle className="h-3 w-3 animate-spin" />
         </div>
 
         <div className="flex items-center gap-1 text-muted-foreground">
@@ -280,6 +357,11 @@ export const MessageList = ({
   className,
   onMessageSelect,
 }: MessageListProps) => {
+  // State
+  const [currentSpeakingId, setCurrentSpeakingId] = useState<string | null>(
+    null
+  );
+
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -328,7 +410,11 @@ export const MessageList = ({
       <div className="space-y-4 p-4 pt-6">
         {messages.map((message) => (
           <div key={message.id} className="group">
-            <MessageBubble message={message} />
+            <MessageBubble
+              message={message}
+              currentSpeakingId={currentSpeakingId}
+              setCurrentSpeakingId={setCurrentSpeakingId}
+            />
           </div>
         ))}
 
