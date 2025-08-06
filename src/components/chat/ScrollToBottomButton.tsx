@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslate } from "@tolgee/react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
@@ -20,9 +20,9 @@ export const ScrollToBottomButton = ({
 
   // State
   const [isVisible, setIsVisible] = useState(false);
-  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
+
+  // Refs
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helpers / Functions
   const checkScrollPosition = useCallback(() => {
@@ -36,20 +36,18 @@ export const ScrollToBottomButton = ({
     const shouldShow = hasScroll && !isNearBottom;
 
     // Clear existing timeout
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
     // Debounce visibility changes to avoid flickering
-    const timeout = setTimeout(
+    debounceTimeoutRef.current = setTimeout(
       () => {
         setIsVisible(shouldShow);
       },
       shouldShow ? 0 : 100
     ); // Show immediately, hide with small delay
-
-    setDebounceTimeout(timeout);
-  }, [scrollContainerRef, debounceTimeout]);
+  }, [scrollContainerRef]);
 
   const scrollToBottom = useCallback(() => {
     const container = scrollContainerRef.current;
@@ -86,8 +84,8 @@ export const ScrollToBottomButton = ({
         resizeObserver.disconnect();
 
         // Clear timeout on cleanup
-        if (debounceTimeout) {
-          clearTimeout(debounceTimeout);
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current);
         }
       };
     },
