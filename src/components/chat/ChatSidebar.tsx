@@ -25,7 +25,9 @@ import { Icons } from "../ui/icons";
 import { Button } from "../ui/button";
 import { KeyboardShortcut } from "../ui/keyboard-shortcut";
 import { useChatList } from "@/hooks/useChatList";
+import { useBookmarkedChats } from "@/hooks/useBookmarkedChats";
 import { Chats } from "./Chats";
+import { BookmarkedChats } from "./BookmarkedChats";
 import { ChatSearchDialog } from "./ChatSearchDialog";
 import Link from "next/link";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -43,7 +45,9 @@ export const ChatSidebar = () => {
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
-  const { isOpen, setIsOpen } = useSearchChat();
+  const { data: bookmarkedChats = [], isLoading: isLoadingBookmarks } =
+    useBookmarkedChats();
+  const { setIsOpen } = useSearchChat();
 
   // Helpers / Functions
   const prefetchArchivedChats = async () => {
@@ -51,12 +55,14 @@ export const ChatSidebar = () => {
       queryKey: ["archivedChats"],
       queryFn: async () => {
         const response = await fetch("/api/chat/archived");
-        
+
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || "Error al obtener chats archivados");
+          throw new Error(
+            errorData.error || "Error al obtener chats archivados"
+          );
         }
-        
+
         const data = await response.json();
         return data.chats;
       },
@@ -65,7 +71,12 @@ export const ChatSidebar = () => {
   };
 
   // Constants
-  const hasChats = chats.length > 0;
+  const hasBookmarkedChats = bookmarkedChats.length > 0;
+  const chatsToShow = chats.filter(
+    (chat) => !bookmarkedChats.some((b) => b.id === chat.id)
+  );
+  const hasChats = chatsToShow.length > 0;
+
   const fullName = user?.user_metadata?.full_name || "";
   const avatarUrl = user?.user_metadata?.avatar_url || "";
   const userEmail = user?.email || "";
@@ -113,8 +124,8 @@ export const ChatSidebar = () => {
             asChild
             className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
           >
-            <Link 
-              href="/archived-chats" 
+            <Link
+              href="/archived-chats"
               prefetch={true}
               onMouseEnter={prefetchArchivedChats}
             >
@@ -149,6 +160,20 @@ export const ChatSidebar = () => {
       </SidebarHeader>
 
       <SidebarContent className="px-0">
+        {/* Bookmarked Chats Section */}
+        {hasBookmarkedChats && (
+          <SidebarGroup className="px-2.5 space-y-0.5">
+            <SidebarGroupLabel>
+              {t("chat.bookmarked", "Guardados")}
+            </SidebarGroupLabel>
+
+            <SidebarGroupContent>
+              <BookmarkedChats chats={bookmarkedChats} />
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {/* History Section */}
         <SidebarGroup className="px-2.5 space-y-0.5">
           <SidebarGroupLabel>
             {t("chat.history", "Historial")}
@@ -172,7 +197,7 @@ export const ChatSidebar = () => {
               </div>
             )}
 
-            {!isLoading && hasChats && <Chats chats={chats} />}
+            {!isLoading && hasChats && <Chats chats={chatsToShow} />}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

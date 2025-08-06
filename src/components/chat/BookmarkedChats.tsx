@@ -12,11 +12,11 @@ import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { BookmarkButton } from "./BookmarkButton";
 
-interface ChatsProps {
+interface BookmarkedChatsProps {
   chats: Chat[];
 }
 
-export const Chats = ({ chats }: ChatsProps) => {
+export const BookmarkedChats = ({ chats }: BookmarkedChatsProps) => {
   // Third party hooks
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -42,7 +42,6 @@ export const Chats = ({ chats }: ChatsProps) => {
   const getIsActive = (chatId: string) => {
     return currentChatId === chatId;
   };
-
 
   return (
     <SidebarMenu>
@@ -89,7 +88,7 @@ export const Chats = ({ chats }: ChatsProps) => {
             )}
             onClick={(e) => e.stopPropagation()}
           >
-            <BookmarkButton chatId={chat.id} chat={chat} />
+            <BookmarkButton chatId={chat.id} chat={chat} isBookmarked={true} />
             <EditChatDialog chatId={chat.id} currentTitle={chat.title} />
             <DeleteChatDialogSimple chatId={chat.id} chatTitle={chat.title} />
           </div>
