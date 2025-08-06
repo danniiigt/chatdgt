@@ -5,7 +5,7 @@
 CREATE TABLE shared_chats (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   chat_id UUID REFERENCES chats(id) ON DELETE CASCADE NOT NULL,
-  share_token TEXT UNIQUE NOT NULL DEFAULT encode(gen_random_bytes(32), 'base64'),
+  share_token TEXT UNIQUE NOT NULL DEFAULT translate(encode(gen_random_bytes(32), 'base64'), '+/=', '-_'),
   is_active BOOLEAN DEFAULT true,
   expires_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
