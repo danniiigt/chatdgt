@@ -231,7 +231,7 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
             </p>
 
             {/* URL display and copy */}
-            <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+            <div className="max-w-sm flex items-center gap-2 p-3 bg-muted rounded-lg">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-mono truncate">{shareUrl}</p>
               </div>
@@ -256,15 +256,15 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
             </div>
 
             {/* Social sharing buttons */}
-            <div className="flex justify-center gap-4 pt-2">
+            <div className="flex justify-center gap-3 pt-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleSocialShare("linkedin")}
-                className="flex flex-col items-center gap-1 h-auto py-3 px-4 aspect-square w-20"
+                className="flex flex-col items-center gap-2 h-auto py-4 px-6 min-w-[80px]"
               >
                 <Icons.linkedin className="h-5 w-5" />
-                <span className="text-xs">
+                <span className="text-xs font-medium">
                   {t("chat.social.linkedin", "LinkedIn")}
                 </span>
               </Button>
@@ -272,10 +272,10 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
                 variant="outline"
                 size="sm"
                 onClick={() => handleSocialShare("reddit")}
-                className="flex flex-col items-center gap-1 h-auto py-3 px-4 aspect-square w-20"
+                className="flex flex-col items-center gap-2 h-auto py-4 px-6 min-w-[80px]"
               >
                 <Icons.reddit className="h-5 w-5" />
-                <span className="text-xs">
+                <span className="text-xs font-medium">
                   {t("chat.social.reddit", "Reddit")}
                 </span>
               </Button>
@@ -283,10 +283,12 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
                 variant="outline"
                 size="sm"
                 onClick={() => handleSocialShare("x")}
-                className="flex flex-col items-center gap-1 h-auto py-3 px-4 aspect-square w-20"
+                className="flex flex-col items-center gap-2 h-auto py-4 px-6 min-w-[80px]"
               >
                 <Icons.x className="h-5 w-5" />
-                <span className="text-xs">{t("chat.social.x", "X")}</span>
+                <span className="text-xs font-medium">
+                  {t("chat.social.x", "X")}
+                </span>
               </Button>
             </div>
           </>
