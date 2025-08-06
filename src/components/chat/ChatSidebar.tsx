@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Search,
-  MessageSquare,
-  PanelLeftClose,
-  Archive,
-} from "lucide-react";
+import { Search, MessageSquare, PanelLeftClose, Archive } from "lucide-react";
 import { useTranslate } from "@tolgee/react";
 import {
   Sidebar,
@@ -87,7 +82,7 @@ export const ChatSidebar = () => {
     : "U";
 
   return (
-    <Sidebar className="w-64 border-r">
+    <Sidebar className="w-64 border-r border-r-border/75">
       <SidebarHeader className="px-2 py-3">
         <div className="flex items-center gap-2 px-2 justify-between">
           <Icons.chatgpt className="size-5" />
@@ -160,7 +155,7 @@ export const ChatSidebar = () => {
       <SidebarContent className="px-0">
         {/* Bookmarked Chats Section */}
         {hasBookmarkedChats && (
-          <SidebarGroup className="px-2.5 space-y-0.5">
+          <SidebarGroup className="px-2 space-y-0.5">
             <SidebarGroupLabel>
               {t("chat.bookmarked", "Guardados")}
             </SidebarGroupLabel>
@@ -172,7 +167,7 @@ export const ChatSidebar = () => {
         )}
 
         {/* History Section */}
-        <SidebarGroup className="px-2.5 space-y-0.5">
+        <SidebarGroup className="px-2 space-y-0.5">
           <SidebarGroupLabel>
             {t("chat.history", "Historial")}
           </SidebarGroupLabel>
