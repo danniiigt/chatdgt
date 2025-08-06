@@ -1,6 +1,6 @@
 import { useTranslate } from "@tolgee/react";
 import { CommandGroup, CommandItem } from "@/components/ui/command";
-import { SearchXIcon } from "lucide-react";
+import { LoaderCircle, SearchXIcon } from "lucide-react";
 import { SearchResult } from "./types";
 import { SearchResultItem } from "./SearchResultItem";
 
@@ -32,7 +32,7 @@ export const SearchResultsGroup = ({
       {isLoading ? (
         <CommandItem value="loading" className="justify-center py-8">
           <div className="flex flex-col items-center text-muted-foreground">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-current mb-2"></div>
+            <LoaderCircle className="size-6 animate-spin mb-2" />
             <span className="text-sm">
               {t("chat.search.searching", "Buscando...")}
             </span>

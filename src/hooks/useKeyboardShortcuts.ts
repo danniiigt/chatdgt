@@ -46,6 +46,6 @@ export const useKeyboardShortcuts = () => {
         document.removeEventListener("keydown", handleKeyDown);
       };
     },
-    [router]
+    [router, setIsOpen]
   );
 };
