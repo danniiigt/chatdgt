@@ -47,6 +47,8 @@ export const ArchiveChatDialog = ({ chatId }: ArchiveChatDialogProps) => {
     onSuccess: () => {
       // Invalidate chat list query to update sidebar
       queryClient.invalidateQueries({ queryKey: ["chats"] });
+      // Invalidate archived chats query to update archived page
+      queryClient.invalidateQueries({ queryKey: ["archivedChats"] });
       
       // Close dialog and redirect to homepage
       setIsOpen(false);

@@ -32,16 +32,37 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSearchChat } from "@/hooks/useSearchChat";
 import { randomColor } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const ChatSidebar = () => {
   // Third party hooks
   const { t } = useTranslate();
   const { toggleSidebar } = useSidebar();
   const user = useUser();
+  const queryClient = useQueryClient();
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
   const { isOpen, setIsOpen } = useSearchChat();
+
+  // Helpers / Functions
+  const prefetchArchivedChats = async () => {
+    await queryClient.prefetchQuery({
+      queryKey: ["archivedChats"],
+      queryFn: async () => {
+        const response = await fetch("/api/chat/archived");
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Error al obtener chats archivados");
+        }
+        
+        const data = await response.json();
+        return data.chats;
+      },
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+  };
 
   // Constants
   const hasChats = chats.length > 0;
@@ -92,7 +113,11 @@ export const ChatSidebar = () => {
             asChild
             className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
           >
-            <Link href="/archived-chats" prefetch={true}>
+            <Link 
+              href="/archived-chats" 
+              prefetch={true}
+              onMouseEnter={prefetchArchivedChats}
+            >
               <div className="flex items-center gap-x-2 w-full pr-2">
                 <Archive className="size-4" />
                 <span>{t("chat.archived-chats", "Archivados")}</span>
