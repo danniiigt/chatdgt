@@ -21,7 +21,7 @@ interface DeleteDialogState {
 
 interface DeleteArchivedChatDialogProps {
   deleteDialog: DeleteDialogState;
-  setDeleteDialog: (state: DeleteDialogState) => void;
+  setDeleteDialog: React.Dispatch<React.SetStateAction<DeleteDialogState>>;
   deleteMutation: UseMutationResult<boolean, Error, string, unknown>;
 }
 
@@ -49,9 +49,12 @@ export const DeleteArchivedChatDialog = ({
   };
 
   return (
-    <Dialog open={deleteDialog.isOpen} onOpenChange={(open) => 
-      setDeleteDialog(prev => ({ ...prev, isOpen: open }))
-    }>
+    <Dialog
+      open={deleteDialog.isOpen}
+      onOpenChange={(open) =>
+        setDeleteDialog((prev) => ({ ...prev, isOpen: open }))
+      }
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -63,7 +66,7 @@ export const DeleteArchivedChatDialog = ({
               "¿Estás seguro de que quieres eliminar permanentemente este chat? Esta acción no se puede deshacer."
             )}
             <br />
-            <strong>"{deleteDialog.chatTitle}"</strong>
+            <strong>&quot;{deleteDialog.chatTitle}&quot;</strong>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

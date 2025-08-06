@@ -3,6 +3,7 @@
 import { useTranslate } from "@tolgee/react";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface SharedChatErrorViewProps {
   error: string;
@@ -25,7 +26,9 @@ export const SharedChatErrorView = ({ error }: SharedChatErrorViewProps) => {
           <p className="text-muted-foreground">{error}</p>
         </div>
         <Button asChild>
-          <a href="/">{t("shared-chat.go-home", "Ir al inicio")}</a>
+          <Link prefetch={true} href="/">
+            {t("shared-chat.go-home", "Ir al inicio")}
+          </Link>
         </Button>
       </div>
     </div>

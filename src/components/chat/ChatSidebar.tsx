@@ -2,7 +2,6 @@
 
 import {
   Search,
-  Settings,
   MessageSquare,
   PanelLeftClose,
   Archive,
@@ -45,8 +44,7 @@ export const ChatSidebar = () => {
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
-  const { data: bookmarkedChats = [], isLoading: isLoadingBookmarks } =
-    useBookmarkedChats();
+  const { data: bookmarkedChats = [] } = useBookmarkedChats();
   const { setIsOpen } = useSearchChat();
 
   // Helpers / Functions

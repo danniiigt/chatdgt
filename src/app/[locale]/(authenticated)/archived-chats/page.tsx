@@ -7,7 +7,7 @@ import { ArchivedChatList } from "@/components/archived-chats/ArchivedChatList";
 import { DeleteArchivedChatDialog } from "@/components/archived-chats/DeleteArchivedChatDialog";
 import { ArchivedChatsSkeletonLoader } from "@/components/archived-chats/ArchivedChatsSkeletonLoader";
 
-export const ArchivedChats = () => {
+const ArchivedChats = () => {
   // Custom hooks
   const { archivedChats, isLoading, unarchiveMutation, deleteMutation } =
     useArchivedChats();
