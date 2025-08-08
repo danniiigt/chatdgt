@@ -264,9 +264,6 @@ export function SignInForm() {
             )}
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && (
-              <Icons.loader className="mr-2 h-4 w-4 animate-spin" />
-            )}
             {isLoading ? (
               <>
                 {t("auth.signin.loading", "Cargando")}

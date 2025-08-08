@@ -186,9 +186,6 @@ export default function ConfirmEmailPage() {
               onClick={handleResendEmail}
               disabled={isResending || !canResend}
             >
-              {isResending && (
-                <Icons.loader className="mr-2 h-4 w-4 animate-spin" />
-              )}
               {isResending ? (
                 <>
                   {t("auth.confirm-email.resending", "Enviando...")}
