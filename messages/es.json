@@ -1,7 +1,1453 @@
 {
+  "[0]": {
+    "chat": {
+      "suggested-messages": {
+        "learn-about-ai": "Explícame cómo funciona la inteligencia artificial"
+      }
+    }
+  },
+  "[100]": {
+    "chat": {
+      "suggested-messages": {
+        "nature-connection": "¿Cómo puedo conectar más con la naturaleza?"
+      }
+    }
+  },
+  "[101]": {
+    "chat": {
+      "suggested-messages": {
+        "self-care": "Dame ideas para cuidarme mejor a mí mismo"
+      }
+    }
+  },
+  "[102]": {
+    "chat": {
+      "suggested-messages": {
+        "positive-thinking": "Ayúdame a desarrollar pensamientos más positivos"
+      }
+    }
+  },
+  "[103]": {
+    "chat": {
+      "suggested-messages": {
+        "random-knowledge": "Comparte conmigo conocimiento aleatorio pero interesante"
+      }
+    }
+  },
+  "[104]": {
+    "chat": {
+      "suggested-messages": {
+        "language-learning": "¿Cómo puedo mejorar mi inglés rápidamente?"
+      }
+    }
+  },
+  "[105]": {
+    "chat": {
+      "suggested-messages": {
+        "pet-care": "Dame consejos para cuidar mejor a mi mascota"
+      }
+    }
+  },
+  "[106]": {
+    "chat": {
+      "suggested-messages": {
+        "home-cooking": "Enséñame a cocinar algo delicioso y fácil"
+      }
+    }
+  },
+  "[107]": {
+    "chat": {
+      "suggested-messages": {
+        "exercise-motivation": "No tengo ganas de hacer ejercicio, ¿cómo me motivo?"
+      }
+    }
+  },
+  "[108]": {
+    "chat": {
+      "suggested-messages": {
+        "money-saving": "Ayúdame a ahorrar dinero en mi día a día"
+      }
+    }
+  },
+  "[109]": {
+    "chat": {
+      "suggested-messages": {
+        "weekend-plans": "Estoy aburrido, ¿qué puedo hacer hoy?"
+      }
+    }
+  },
+  "[10]": {
+    "chat": {
+      "suggested-messages": {
+        "stress-management": "¿Cómo puedo manejar mejor el estrés?"
+      }
+    }
+  },
+  "[110]": {
+    "chat": {
+      "suggested-messages": {
+        "study-tips": "¿Cómo puedo concentrarme mejor al estudiar?"
+      }
+    }
+  },
+  "[111]": {
+    "chat": {
+      "suggested-messages": {
+        "social-media": "¿Debería usar menos las redes sociales?"
+      }
+    }
+  },
+  "[112]": {
+    "chat": {
+      "suggested-messages": {
+        "fashion-advice": "Ayúdame a mejorar mi estilo de vestir"
+      }
+    }
+  },
+  "[113]": {
+    "chat": {
+      "suggested-messages": {
+        "phone-addiction": "Paso demasiado tiempo en el móvil, ¿qué hago?"
+      }
+    }
+  },
+  "[114]": {
+    "chat": {
+      "suggested-messages": {
+        "birthday-party": "Dame ideas para organizar una fiesta de cumpleaños"
+      }
+    }
+  },
+  "[115]": {
+    "chat": {
+      "suggested-messages": {
+        "procrastination": "Siempre dejo todo para último momento, ¿cómo cambio?"
+      }
+    }
+  },
+  "[116]": {
+    "chat": {
+      "suggested-messages": {
+        "first-job": "Es mi primer trabajo, ¿qué consejos me das?"
+      }
+    }
+  },
+  "[117]": {
+    "chat": {
+      "suggested-messages": {
+        "bad-day": "He tenido un día horrible, ¿cómo mejoro mi ánimo?"
+      }
+    }
+  },
+  "[118]": {
+    "chat": {
+      "suggested-messages": {
+        "new-city": "Me mudé a una nueva ciudad, ¿cómo hago amigos?"
+      }
+    }
+  },
+  "[119]": {
+    "chat": {
+      "suggested-messages": {
+        "college-life": "Voy a empezar la universidad, ¿qué debo saber?"
+      }
+    }
+  },
+  "[11]": {
+    "chat": {
+      "suggested-messages": {
+        "sleep-improvement": "Tengo problemas para dormir bien, ¿qué puedo hacer?"
+      }
+    }
+  },
+  "[120]": {
+    "chat": {
+      "suggested-messages": {
+        "family-problems": "Tengo problemas familiares, ¿cómo los manejo?"
+      }
+    }
+  },
+  "[121]": {
+    "chat": {
+      "suggested-messages": {
+        "night-routine": "¿Qué debería hacer antes de acostarme?"
+      }
+    }
+  },
+  "[122]": {
+    "chat": {
+      "suggested-messages": {
+        "eating-healthy": "Quiero comer más sano pero no sé por dónde empezar"
+      }
+    }
+  },
+  "[123]": {
+    "chat": {
+      "suggested-messages": {
+        "dating-advice": "Dame consejos para las citas amorosas"
+      }
+    }
+  },
+  "[124]": {
+    "chat": {
+      "suggested-messages": {
+        "job-interview": "Estoy nervioso por una entrevista, ¿qué hago?"
+      }
+    }
+  },
+  "[125]": {
+    "chat": {
+      "suggested-messages": {
+        "learning-online": "¿Cuáles son los mejores cursos online gratuitos?"
+      }
+    }
+  },
+  "[126]": {
+    "chat": {
+      "suggested-messages": {
+        "winter-blues": "Me siento triste en invierno, ¿es normal?"
+      }
+    }
+  },
+  "[127]": {
+    "chat": {
+      "suggested-messages": {
+        "toxic-people": "¿Cómo lidio con personas tóxicas en mi vida?"
+      }
+    }
+  },
+  "[128]": {
+    "chat": {
+      "suggested-messages": {
+        "car-maintenance": "¿Qué cuidados básicos necesita mi coche?"
+      }
+    }
+  },
+  "[129]": {
+    "chat": {
+      "suggested-messages": {
+        "plant-care": "Se me mueren todas las plantas, ¿qué hago mal?"
+      }
+    }
+  },
+  "[12]": {
+    "chat": {
+      "suggested-messages": {
+        "creative-writing": "Ayúdame a escribir una historia interesante"
+      }
+    }
+  },
+  "[130]": {
+    "chat": {
+      "suggested-messages": {
+        "gift-wrapping": "Enséñame formas creativas de envolver regalos"
+      }
+    }
+  },
+  "[131]": {
+    "chat": {
+      "suggested-messages": {
+        "loneliness": "Me siento solo últimamente, ¿qué puedo hacer?"
+      }
+    }
+  },
+  "[132]": {
+    "chat": {
+      "suggested-messages": {
+        "morning-energy": "Siempre me levanto sin energía, ¿cómo cambio esto?"
+      }
+    }
+  },
+  "[133]": {
+    "chat": {
+      "suggested-messages": {
+        "social-anxiety": "Me da ansiedad hablar con desconocidos, ¿consejos?"
+      }
+    }
+  },
+  "[134]": {
+    "chat": {
+      "suggested-messages": {
+        "phone-etiquette": "¿Cuáles son las reglas básicas del móvil en sociedad?"
+      }
+    }
+  },
+  "[135]": {
+    "chat": {
+      "suggested-messages": {
+        "hobby-ideas": "Busco un hobby nuevo que no sea caro"
+      }
+    }
+  },
+  "[136]": {
+    "chat": {
+      "suggested-messages": {
+        "productivity-apps": "¿Qué aplicaciones me ayudan a ser más productivo?"
+      }
+    }
+  },
+  "[137]": {
+    "chat": {
+      "suggested-messages": {
+        "room-decoration": "Quiero decorar mi habitación con poco dinero"
+      }
+    }
+  },
+  "[138]": {
+    "chat": {
+      "suggested-messages": {
+        "healthy-snacks": "Dame ideas de snacks saludables y ricos"
+      }
+    }
+  },
+  "[139]": {
+    "chat": {
+      "suggested-messages": {
+        "first-date": "Tengo una primera cita, ¿de qué hablo?"
+      }
+    }
+  },
+  "[13]": {
+    "chat": {
+      "suggested-messages": {
+        "meditation-guide": "¿Cómo puedo empezar a meditar?"
+      }
+    }
+  },
+  "[140]": {
+    "chat": {
+      "suggested-messages": {
+        "bad-habits": "Ayúdame a dejar un mal hábito que tengo"
+      }
+    }
+  },
+  "[141]": {
+    "chat": {
+      "suggested-messages": {
+        "surprise-party": "Quiero organizar una fiesta sorpresa, ¿cómo?"
+      }
+    }
+  },
+  "[142]": {
+    "chat": {
+      "suggested-messages": {
+        "water-intake": "Nunca me acuerdo de beber agua, ¿cómo crear el hábito?"
+      }
+    }
+  },
+  "[143]": {
+    "chat": {
+      "suggested-messages": {
+        "music-discovery": "¿Cómo puedo descubrir música nueva que me guste?"
+      }
+    }
+  },
+  "[144]": {
+    "chat": {
+      "suggested-messages": {
+        "email-etiquette": "¿Cómo escribir emails profesionales correctamente?"
+      }
+    }
+  },
+  "[145]": {
+    "chat": {
+      "suggested-messages": {
+        "netflix-recommendations": "No sé qué ver en Netflix, ¿me recomiendas algo?"
+      }
+    }
+  },
+  "[146]": {
+    "chat": {
+      "suggested-messages": {
+        "small-talk": "¿Cómo iniciar conversaciones casuales con la gente?"
+      }
+    }
+  },
+  "[147]": {
+    "chat": {
+      "suggested-messages": {
+        "apartment-hunting": "Busco apartamento por primera vez, ¿qué debo saber?"
+      }
+    }
+  },
+  "[148]": {
+    "chat": {
+      "suggested-messages": {
+        "workout-home": "No puedo ir al gym, ¿cómo ejercitarme en casa?"
+      }
+    }
+  },
+  "[149]": {
+    "chat": {
+      "suggested-messages": {
+        "saving-money": "Gasto demasiado dinero, ¿cómo controlo mis gastos?"
+      }
+    }
+  },
+  "[14]": {
+    "chat": {
+      "suggested-messages": {
+        "interview-prep": "Tengo una entrevista de trabajo, ¿cómo me preparo?"
+      }
+    }
+  },
+  "[150]": {
+    "chat": {
+      "suggested-messages": {
+        "cooking-basics": "No sé cocinar nada, ¿por dónde empiezo?"
+      }
+    }
+  },
+  "[151]": {
+    "chat": {
+      "suggested-messages": {
+        "phone-photography": "¿Cómo tomar mejores fotos con mi móvil?"
+      }
+    }
+  },
+  "[152]": {
+    "chat": {
+      "suggested-messages": {
+        "party-games": "Dame ideas de juegos para una reunión con amigos"
+      }
+    }
+  },
+  "[153]": {
+    "chat": {
+      "suggested-messages": {
+        "morning-motivation": "¿Cómo empezar el día con energía positiva?"
+      }
+    }
+  },
+  "[154]": {
+    "chat": {
+      "suggested-messages": {
+        "weekend-getaway": "Quiero hacer una escapada de fin de semana, ¿dónde?"
+      }
+    }
+  },
+  "[155]": {
+    "chat": {
+      "suggested-messages": {
+        "learning-guitar": "¿Es difícil aprender a tocar la guitarra de adulto?"
+      }
+    }
+  },
+  "[156]": {
+    "chat": {
+      "suggested-messages": {
+        "job-search": "Llevo meses buscando trabajo, ¿qué hago mal?"
+      }
+    }
+  },
+  "[157]": {
+    "chat": {
+      "suggested-messages": {
+        "birthday-ideas": "Es mi cumpleaños pronto, ¿cómo lo celebro?"
+      }
+    }
+  },
+  "[158]": {
+    "chat": {
+      "suggested-messages": {
+        "night-out": "Salgo esta noche con amigos, ¿qué planes hay?"
+      }
+    }
+  },
+  "[159]": {
+    "chat": {
+      "suggested-messages": {
+        "cleaning-motivation": "Odio limpiar la casa, ¿cómo me motivo?"
+      }
+    }
+  },
+  "[15]": {
+    "chat": {
+      "suggested-messages": {
+        "budget-planning": "Ayúdame a organizar mis finanzas personales"
+      }
+    }
+  },
+  "[160]": {
+    "chat": {
+      "suggested-messages": {
+        "rainy-day": "Está lloviendo y me aburro, ¿qué hago en casa?"
+      }
+    }
+  },
+  "[161]": {
+    "chat": {
+      "suggested-messages": {
+        "cheap-dates": "Dame ideas de citas románticas que no cuesten mucho"
+      }
+    }
+  },
+  "[162]": {
+    "chat": {
+      "suggested-messages": {
+        "morning-coffee": "¿Cómo hacer un café perfecto en casa?"
+      }
+    }
+  },
+  "[17]": {
+    "chat": {
+      "suggested-messages": {
+        "learning-strategies": "¿Cuáles son las mejores técnicas de estudio?"
+      }
+    }
+  },
+  "[18]": {
+    "chat": {
+      "suggested-messages": {
+        "relationship-advice": "Dame consejos para mejorar mis relaciones personales"
+      }
+    }
+  },
+  "[19]": {
+    "chat": {
+      "suggested-messages": {
+        "creative-hobbies": "¿Qué hobbies creativos puedo empezar?"
+      }
+    }
+  },
+  "[1]": {
+    "chat": {
+      "suggested-messages": {
+        "productivity-tips": "Dame consejos para ser más productivo en mi día a día"
+      }
+    }
+  },
+  "[20]": {
+    "chat": {
+      "suggested-messages": {
+        "mental-health": "¿Cómo puedo cuidar mejor mi salud mental?"
+      }
+    }
+  },
+  "[21]": {
+    "chat": {
+      "suggested-messages": {
+        "goal-setting": "Ayúdame a establecer objetivos realistas"
+      }
+    }
+  },
+  "[22]": {
+    "chat": {
+      "suggested-messages": {
+        "technology-explained": "Explícame las últimas tendencias tecnológicas"
+      }
+    }
+  },
+  "[23]": {
+    "chat": {
+      "suggested-messages": {
+        "sustainable-living": "¿Cómo puedo vivir de forma más sostenible?"
+      }
+    }
+  },
+  "[24]": {
+    "chat": {
+      "suggested-messages": {
+        "photography-tips": "Dame consejos para mejorar mis fotografías"
+      }
+    }
+  },
+  "[25]": {
+    "chat": {
+      "suggested-messages": {
+        "music-recommendations": "¿Qué música nueva me recomiendas?"
+      }
+    }
+  },
+  "[26]": {
+    "chat": {
+      "suggested-messages": {
+        "space-facts": "Cuéntame curiosidades sobre el espacio"
+      }
+    }
+  },
+  "[27]": {
+    "chat": {
+      "suggested-messages": {
+        "gardening-help": "¿Cómo puedo empezar un pequeño huerto?"
+      }
+    }
+  },
+  "[28]": {
+    "chat": {
+      "suggested-messages": {
+        "movie-recommendations": "Recomiéndame películas interesantes para ver"
+      }
+    }
+  },
+  "[29]": {
+    "chat": {
+      "suggested-messages": {
+        "history-curiosities": "Cuéntame datos curiosos de la historia"
+      }
+    }
+  },
+  "[2]": {
+    "chat": {
+      "suggested-messages": {
+        "healthy-habits": "¿Cómo puedo crear hábitos más saludables?"
+      }
+    }
+  },
+  "[30]": {
+    "chat": {
+      "suggested-messages": {
+        "science-explained": "Explícame conceptos científicos de forma simple"
+      }
+    }
+  },
+  "[31]": {
+    "chat": {
+      "suggested-messages": {
+        "art-appreciation": "Háblame sobre diferentes estilos de arte"
+      }
+    }
+  },
+  "[32]": {
+    "chat": {
+      "suggested-messages": {
+        "cultural-differences": "Cuéntame sobre culturas diferentes del mundo"
+      }
+    }
+  },
+  "[33]": {
+    "chat": {
+      "suggested-messages": {
+        "memory-improvement": "¿Cómo puedo mejorar mi memoria?"
+      }
+    }
+  },
+  "[34]": {
+    "chat": {
+      "suggested-messages": {
+        "confidence-building": "Ayúdame a ganar más confianza en mí mismo"
+      }
+    }
+  },
+  "[35]": {
+    "chat": {
+      "suggested-messages": {
+        "public-speaking": "Tengo miedo a hablar en público, ¿qué hago?"
+      }
+    }
+  },
+  "[36]": {
+    "chat": {
+      "suggested-messages": {
+        "decision-making": "¿Cómo puedo tomar mejores decisiones?"
+      }
+    }
+  },
+  "[37]": {
+    "chat": {
+      "suggested-messages": {
+        "creativity-boost": "Ayúdame a ser más creativo"
+      }
+    }
+  },
+  "[38]": {
+    "chat": {
+      "suggested-messages": {
+        "morning-routine": "¿Cómo crear una rutina matutina efectiva?"
+      }
+    }
+  },
+  "[39]": {
+    "chat": {
+      "suggested-messages": {
+        "evening-routine": "Necesito una buena rutina para antes de dormir"
+      }
+    }
+  },
+  "[3]": {
+    "chat": {
+      "suggested-messages": {
+        "career-advice": "Necesito consejos para avanzar en mi carrera profesional"
+      }
+    }
+  },
+  "[40]": {
+    "chat": {
+      "suggested-messages": {
+        "communication-skills": "¿Cómo puedo comunicarme mejor con otros?"
+      }
+    }
+  },
+  "[41]": {
+    "chat": {
+      "suggested-messages": {
+        "mindfulness-practice": "Enséñame ejercicios de mindfulness"
+      }
+    }
+  },
+  "[42]": {
+    "chat": {
+      "suggested-messages": {
+        "food-nutrition": "¿Cómo puedo mejorar mi alimentación?"
+      }
+    }
+  },
+  "[43]": {
+    "chat": {
+      "suggested-messages": {
+        "energy-boost": "Me siento sin energía, ¿qué puedo hacer?"
+      }
+    }
+  },
+  "[44]": {
+    "chat": {
+      "suggested-messages": {
+        "weather-chat": "Explícame cómo se forman los fenómenos meteorológicos"
+      }
+    }
+  },
+  "[45]": {
+    "chat": {
+      "suggested-messages": {
+        "animal-facts": "Cuéntame datos fascinantes sobre animales"
+      }
+    }
+  },
+  "[46]": {
+    "chat": {
+      "suggested-messages": {
+        "ocean-mysteries": "Háblame de los misterios del océano"
+      }
+    }
+  },
+  "[47]": {
+    "chat": {
+      "suggested-messages": {
+        "brain-facts": "¿Cómo funciona realmente nuestro cerebro?"
+      }
+    }
+  },
+  "[48]": {
+    "chat": {
+      "suggested-messages": {
+        "future-predictions": "¿Cómo crees que será el mundo en 20 años?"
+      }
+    }
+  },
+  "[49]": {
+    "chat": {
+      "suggested-messages": {
+        "childhood-nostalgia": "Háblame de juegos y cosas de cuando era niño"
+      }
+    }
+  },
+  "[4]": {
+    "chat": {
+      "suggested-messages": {
+        "time-management": "Ayúdame a gestionar mejor mi tiempo"
+      }
+    }
+  },
+  "[50]": {
+    "chat": {
+      "suggested-messages": {
+        "urban-myths": "Cuéntame sobre mitos urbanos interesantes"
+      }
+    }
+  },
+  "[51]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-motivation": "Necesito motivación para empezar el día"
+      }
+    }
+  },
+  "[52]": {
+    "chat": {
+      "suggested-messages": {
+        "climate-change": "Explícame el cambio climático de forma simple"
+      }
+    }
+  },
+  "[53]": {
+    "chat": {
+      "suggested-messages": {
+        "social-situations": "¿Cómo puedo ser menos tímido en situaciones sociales?"
+      }
+    }
+  },
+  "[54]": {
+    "chat": {
+      "suggested-messages": {
+        "weekend-activities": "Dame ideas de qué hacer este fin de semana"
+      }
+    }
+  },
+  "[55]": {
+    "chat": {
+      "suggested-messages": {
+        "gift-ideas": "Ayúdame a encontrar el regalo perfecto"
+      }
+    }
+  },
+  "[56]": {
+    "chat": {
+      "suggested-messages": {
+        "learning-motivation": "¿Cómo puedo mantenerme motivado para aprender?"
+      }
+    }
+  },
+  "[57]": {
+    "chat": {
+      "suggested-messages": {
+        "random-facts": "Cuéntame datos curiosos que no sabía"
+      }
+    }
+  },
+  "[58]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-habits": "¿Qué hábitos pequeños pueden mejorar mi vida?"
+      }
+    }
+  },
+  "[59]": {
+    "chat": {
+      "suggested-messages": {
+        "seasonal-advice": "Dame consejos para esta época del año"
+      }
+    }
+  },
+  "[5]": {
+    "chat": {
+      "suggested-messages": {
+        "learn-new-language": "¿Cuál es la mejor forma de aprender un nuevo idioma?"
+      }
+    }
+  },
+  "[60]": {
+    "chat": {
+      "suggested-messages": {
+        "life-philosophy": "Háblame sobre diferentes filosofías de vida"
+      }
+    }
+  },
+  "[61]": {
+    "chat": {
+      "suggested-messages": {
+        "problem-solving": "Ayúdame a resolver un problema que tengo"
+      }
+    }
+  },
+  "[62]": {
+    "chat": {
+      "suggested-messages": {
+        "future-career": "¿Qué trabajos crees que existirán en el futuro?"
+      }
+    }
+  },
+  "[63]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-gratitude": "¿Cómo puedo practicar la gratitud cada día?"
+      }
+    }
+  },
+  "[64]": {
+    "chat": {
+      "suggested-messages": {
+        "personality-types": "Explícame los diferentes tipos de personalidad"
+      }
+    }
+  },
+  "[65]": {
+    "chat": {
+      "suggested-messages": {
+        "language-curiosities": "Cuéntame curiosidades sobre los idiomas"
+      }
+    }
+  },
+  "[66]": {
+    "chat": {
+      "suggested-messages": {
+        "food-culture": "Háblame sobre la comida de diferentes países"
+      }
+    }
+  },
+  "[67]": {
+    "chat": {
+      "suggested-messages": {
+        "invention-stories": "Cuéntame historias de inventos famosos"
+      }
+    }
+  },
+  "[68]": {
+    "chat": {
+      "suggested-messages": {
+        "natural-wonders": "Descríbeme las maravillas naturales del mundo"
+      }
+    }
+  },
+  "[69]": {
+    "chat": {
+      "suggested-messages": {
+        "human-achievements": "¿Cuáles han sido los mayores logros humanos?"
+      }
+    }
+  },
+  "[6]": {
+    "chat": {
+      "suggested-messages": {
+        "cooking-help": "Recomiéndame una receta fácil para esta noche"
+      }
+    }
+  },
+  "[70]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-routine": "Ayúdame a optimizar mi rutina diaria"
+      }
+    }
+  },
+  "[71]": {
+    "chat": {
+      "suggested-messages": {
+        "emotion-management": "¿Cómo puedo manejar mejor mis emociones?"
+      }
+    }
+  },
+  "[72]": {
+    "chat": {
+      "suggested-messages": {
+        "world-cultures": "Enséñame sobre tradiciones de otros países"
+      }
+    }
+  },
+  "[73]": {
+    "chat": {
+      "suggested-messages": {
+        "simple-pleasures": "Háblame de los pequeños placeres de la vida"
+      }
+    }
+  },
+  "[74]": {
+    "chat": {
+      "suggested-messages": {
+        "coincidences": "Cuéntame sobre coincidencias increíbles"
+      }
+    }
+  },
+  "[75]": {
+    "chat": {
+      "suggested-messages": {
+        "dreams-meaning": "¿Qué significan los sueños que tenemos?"
+      }
+    }
+  },
+  "[76]": {
+    "chat": {
+      "suggested-messages": {
+        "color-psychology": "Explícame cómo los colores afectan nuestro estado de ánimo"
+      }
+    }
+  },
+  "[77]": {
+    "chat": {
+      "suggested-messages": {
+        "memory-lane": "Háblame de cosas que eran populares en el pasado"
+      }
+    }
+  },
+  "[78]": {
+    "chat": {
+      "suggested-messages": {
+        "life-hacks": "Dame trucos útiles para la vida cotidiana"
+      }
+    }
+  },
+  "[79]": {
+    "chat": {
+      "suggested-messages": {
+        "seasonal-changes": "¿Por qué cambian las estaciones del año?"
+      }
+    }
+  },
+  "[7]": {
+    "chat": {
+      "suggested-messages": {
+        "workout-routine": "Necesito una rutina de ejercicios para hacer en casa"
+      }
+    }
+  },
+  "[80]": {
+    "chat": {
+      "suggested-messages": {
+        "human-behavior": "Explícame por qué las personas actúan como lo hacen"
+      }
+    }
+  },
+  "[81]": {
+    "chat": {
+      "suggested-messages": {
+        "ancient-mysteries": "Cuéntame misterios de civilizaciones antiguas"
+      }
+    }
+  },
+  "[82]": {
+    "chat": {
+      "suggested-messages": {
+        "funny-stories": "Cuéntame algo gracioso o divertido"
+      }
+    }
+  },
+  "[83]": {
+    "chat": {
+      "suggested-messages": {
+        "world-records": "Háblame de récords mundiales increíbles"
+      }
+    }
+  },
+  "[84]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-reflection": "Ayúdame a reflexionar sobre mi día"
+      }
+    }
+  },
+  "[85]": {
+    "chat": {
+      "suggested-messages": {
+        "optimism-tips": "¿Cómo puedo ser más optimista?"
+      }
+    }
+  },
+  "[86]": {
+    "chat": {
+      "suggested-messages": {
+        "local-traditions": "Cuéntame tradiciones interesantes de España"
+      }
+    }
+  },
+  "[87]": {
+    "chat": {
+      "suggested-messages": {
+        "weather-phenomena": "Explícame fenómenos meteorológicos raros"
+      }
+    }
+  },
+  "[88]": {
+    "chat": {
+      "suggested-messages": {
+        "body-language": "¿Cómo puedo entender mejor el lenguaje corporal?"
+      }
+    }
+  },
+  "[89]": {
+    "chat": {
+      "suggested-messages": {
+        "daily-inspiration": "Dame una frase inspiradora para hoy"
+      }
+    }
+  },
+  "[8]": {
+    "chat": {
+      "suggested-messages": {
+        "book-recommendations": "¿Qué libros me recomiendas leer?"
+      }
+    }
+  },
+  "[90]": {
+    "chat": {
+      "suggested-messages": {
+        "friendship-advice": "¿Cómo puedo ser un mejor amigo?"
+      }
+    }
+  },
+  "[91]": {
+    "chat": {
+      "suggested-messages": {
+        "seasonal-activities": "¿Qué actividades puedo hacer según la época del año?"
+      }
+    }
+  },
+  "[92]": {
+    "chat": {
+      "suggested-messages": {
+        "mindful-moments": "Ayúdame a encontrar momentos de calma en mi día"
+      }
+    }
+  },
+  "[93]": {
+    "chat": {
+      "suggested-messages": {
+        "life-lessons": "¿Qué lecciones de vida son importantes aprender?"
+      }
+    }
+  },
+  "[94]": {
+    "chat": {
+      "suggested-messages": {
+        "curiosity-topics": "Háblame de algo que despierte mi curiosidad"
+      }
+    }
+  },
+  "[95]": {
+    "chat": {
+      "suggested-messages": {
+        "personal-growth": "¿Cómo puedo seguir creciendo como persona?"
+      }
+    }
+  },
+  "[96]": {
+    "chat": {
+      "suggested-messages": {
+        "kindness-acts": "Dame ideas de actos de bondad que puedo hacer"
+      }
+    }
+  },
+  "[97]": {
+    "chat": {
+      "suggested-messages": {
+        "simple-joys": "Recuérdame las cosas simples que traen felicidad"
+      }
+    }
+  },
+  "[98]": {
+    "chat": {
+      "suggested-messages": {
+        "conversation-starters": "Dame ideas para iniciar conversaciones interesantes"
+      }
+    }
+  },
+  "[99]": {
+    "chat": {
+      "suggested-messages": {
+        "life-balance": "¿Cómo puedo encontrar mejor equilibrio en mi vida?"
+      }
+    }
+  },
+  "[9]": {
+    "chat": {
+      "suggested-messages": {
+        "travel-planning": "Ayúdame a planificar mi próximo viaje"
+      }
+    }
+  },
+  "Archivando": "Archivando",
+  "auth": {
+    "confirm-email": {
+      "back-to-signin": "Volver a Iniciar Sesión",
+      "description": "Hemos enviado un correo de verificación a {email}. Por favor revisa tu bandeja de entrada y haz clic en el enlace de verificación para acceder a la plataforma.",
+      "description-part1": "Hemos enviado un correo de verificación a",
+      "description-part2": "Por favor revisa tu bandeja de entrada y haz clic en el enlace de verificación para acceder a la plataforma.",
+      "no-email": "¿No recibiste el correo? Revisa tu carpeta de spam o solicita uno nuevo.",
+      "resend": "Reenviar Correo de Verificación",
+      "title": "Verifica tu Correo",
+      "wait-to-resend": "Puedes reenviar el correo en"
+    },
+    "email-confirmed": {
+      "description": "Tu correo ha sido verificado exitosamente. Ahora puedes iniciar sesión en tu cuenta.",
+      "go-to-signin": "Ir a Iniciar Sesión",
+      "title": "¡Correo Verificado!"
+    },
+    "signin": {
+      "create-account": "Crea una cuenta",
+      "description": "Introduce tu email y contraseña para acceder",
+      "email": "Email",
+      "email-placeholder": "Introduce tu email",
+      "no-account": "¿No tienes cuenta?",
+      "password": "Contraseña",
+      "password-placeholder": "Introduce tu contraseña",
+      "submit": "Acceder",
+      "title": "Iniciar sesión"
+    },
+    "signup": {
+      "confirm-password": "Confirmar contraseña",
+      "confirm-password-placeholder": "Introduce tu contraseña",
+      "description": "Introduce tu email y contraseña para acceder",
+      "email": "Email",
+      "email-placeholder": "Introduce tu email",
+      "have-account": "¿Ya tienes cuenta? ",
+      "password": "Contraseña",
+      "password-placeholder": "Introduce tu contraseña",
+      "signin": "Inicia sesión",
+      "submit": "Crear cuenta",
+      "title": "Crear cuenta"
+    }
+  },
+  "Buscando": "Buscando",
+  "Buscando...": "Buscando...",
+  "Cancelando": "Cancelando",
+  "Cargando": "Cargando",
+  "Cargando...": "Cargando...",
+  "chat": {
+    "archive": "Archivar",
+    "archive.confirm.description": "Esta acción no se puede deshacer. La conversación y todos sus mensajes serán archivados permanentemente.",
+    "archive.confirm.title": "Archivar conversación",
+    "archived-chats": "Archivados",
+    "archived": {
+      "date": "Archivado"
+    },
+    "bookmarked": "Guardados",
+    "bookmark": {
+      "remove": "No guardar"
+    },
+    "delete": "Eliminar",
+    "delete.confirm.description": "Esta acción no se puede deshacer. La conversación y todos sus mensajes serán eliminados permanentemente.",
+    "delete.confirm.title": "Eliminar conversación",
+    "delete.permanent": "Eliminar permanentemente",
+    "delete.permanent.description": "¿Estás seguro de que quieres eliminar permanentemente este chat? Esta acción no se puede deshacer.",
+    "delete.permanent.title": "Eliminar permanentemente",
+    "edit": "Editar",
+    "edit.description": "Cambia el nombre de esta conversación para identificarla más fácilmente.",
+    "edit.save": "Guardar",
+    "edit.title": "Editar nombre del chat",
+    "history": "Historial",
+    "input-placeholder": "¿Por dónde deberíamos empezar?",
+    "message": {
+      "assistant": "Asistente",
+      "copy": "Copiar mensaje",
+      "speak": "Escuchar mensaje",
+      "tokens": "Tokens",
+      "you": "Tú"
+    },
+    "new-chat": "Nuevo",
+    "restore": "Restaurar",
+    "scroll-to-bottom": "Ir al final de la conversación",
+    "search": {
+      "actions": "Acciones",
+      "create-chat": "Crear chat",
+      "last-7-days": "Ultimos 7 días",
+      "placeholder": "Buscar chats...",
+      "today": "Hoy"
+    },
+    "search-chat": "Buscar",
+    "settings": "Configuración",
+    "share": "Compartir",
+    "share-dialog": {
+      "create-link": "Crear enlace",
+      "description": "Esta conversación puede incluir información personal.",
+      "privacy-notice": "Tu nombre, las instrucciones personalizadas y cualquier mensaje que añadas después de compartir serán privados.",
+      "title": "Compartir el enlace público al chat",
+      "warning": "Tómate un momento para comprobar el contenido antes de compartir el enlace."
+    },
+    "suggested-messages": {
+      "ancient-mysteries": "Cuéntame misterios de civilizaciones antiguas",
+      "animal-facts": "Cuéntame datos fascinantes sobre animales",
+      "apartment-hunting": "Busco apartamento por primera vez, ¿qué debo saber?",
+      "art-appreciation": "Háblame sobre diferentes estilos de arte",
+      "bad-day": "He tenido un día horrible, ¿cómo mejoro mi ánimo?",
+      "bad-habits": "Ayúdame a dejar un mal hábito que tengo",
+      "birthday-ideas": "Es mi cumpleaños pronto, ¿cómo lo celebro?",
+      "birthday-party": "Dame ideas para organizar una fiesta de cumpleaños",
+      "body-language": "¿Cómo puedo entender mejor el lenguaje corporal?",
+      "book-recommendations": "¿Qué libros me recomiendas leer?",
+      "brain-facts": "¿Cómo funciona realmente nuestro cerebro?",
+      "budget-planning": "Ayúdame a organizar mis finanzas personales",
+      "career-advice": "Necesito consejos para avanzar en mi carrera profesional",
+      "car-maintenance": "¿Qué cuidados básicos necesita mi coche?",
+      "cheap-dates": "Dame ideas de citas románticas que no cuesten mucho",
+      "childhood-nostalgia": "Háblame de juegos y cosas de cuando era niño",
+      "cleaning-motivation": "Odio limpiar la casa, ¿cómo me motivo?",
+      "climate-change": "Explícame el cambio climático de forma simple",
+      "coincidences": "Cuéntame sobre coincidencias increíbles",
+      "college-life": "Voy a empezar la universidad, ¿qué debo saber?",
+      "color-psychology": "Explícame cómo los colores afectan nuestro estado de ánimo",
+      "communication-skills": "¿Cómo puedo comunicarme mejor con otros?",
+      "confidence-building": "Ayúdame a ganar más confianza en mí mismo",
+      "conversation-starters": "Dame ideas para iniciar conversaciones interesantes",
+      "cooking-basics": "No sé cocinar nada, ¿por dónde empiezo?",
+      "cooking-help": "Recomiéndame una receta fácil para esta noche",
+      "creative-hobbies": "¿Qué hobbies creativos puedo empezar?",
+      "creative-writing": "Ayúdame a escribir una historia interesante",
+      "creativity-boost": "Ayúdame a ser más creativo",
+      "cultural-differences": "Cuéntame sobre culturas diferentes del mundo",
+      "curiosity-topics": "Háblame de algo que despierte mi curiosidad",
+      "daily-gratitude": "¿Cómo puedo practicar la gratitud cada día?",
+      "daily-habits": "¿Qué hábitos pequeños pueden mejorar mi vida?",
+      "daily-inspiration": "Dame una frase inspiradora para hoy",
+      "daily-motivation": "Necesito motivación para empezar el día",
+      "daily-reflection": "Ayúdame a reflexionar sobre mi día",
+      "daily-routine": "Ayúdame a optimizar mi rutina diaria",
+      "dating-advice": "Dame consejos para las citas amorosas",
+      "decision-making": "¿Cómo puedo tomar mejores decisiones?",
+      "dreams-meaning": "¿Qué significan los sueños que tenemos?",
+      "eating-healthy": "Quiero comer más sano pero no sé por dónde empezar",
+      "email-etiquette": "¿Cómo escribir emails profesionales correctamente?",
+      "emotion-management": "¿Cómo puedo manejar mejor mis emociones?",
+      "energy-boost": "Me siento sin energía, ¿qué puedo hacer?",
+      "evening-routine": "Necesito una buena rutina para antes de dormir",
+      "exercise-motivation": "No tengo ganas de hacer ejercicio, ¿cómo me motivo?",
+      "family-problems": "Tengo problemas familiares, ¿cómo los manejo?",
+      "fashion-advice": "Ayúdame a mejorar mi estilo de vestir",
+      "first-date": "Tengo una primera cita, ¿de qué hablo?",
+      "first-job": "Es mi primer trabajo, ¿qué consejos me das?",
+      "food-culture": "Háblame sobre la comida de diferentes países",
+      "food-nutrition": "¿Cómo puedo mejorar mi alimentación?",
+      "friendship-advice": "¿Cómo puedo ser un mejor amigo?",
+      "funny-stories": "Cuéntame algo gracioso o divertido",
+      "future-career": "¿Qué trabajos crees que existirán en el futuro?",
+      "future-predictions": "¿Cómo crees que será el mundo en 20 años?",
+      "gardening-help": "¿Cómo puedo empezar un pequeño huerto?",
+      "gift-ideas": "Ayúdame a encontrar el regalo perfecto",
+      "gift-wrapping": "Enséñame formas creativas de envolver regalos",
+      "goal-setting": "Ayúdame a establecer objetivos realistas",
+      "healthy-habits": "¿Cómo puedo crear hábitos más saludables?",
+      "healthy-snacks": "Dame ideas de snacks saludables y ricos",
+      "history-curiosities": "Cuéntame datos curiosos de la historia",
+      "hobby-ideas": "Busco un hobby nuevo que no sea caro",
+      "home-cooking": "Enséñame a cocinar algo delicioso y fácil",
+      "home-organization": "¿Cómo puedo organizar mejor mi casa?",
+      "human-achievements": "¿Cuáles han sido los mayores logros humanos?",
+      "human-behavior": "Explícame por qué las personas actúan como lo hacen",
+      "interview-prep": "Tengo una entrevista de trabajo, ¿cómo me preparo?",
+      "invention-stories": "Cuéntame historias de inventos famosos",
+      "job-interview": "Estoy nervioso por una entrevista, ¿qué hago?",
+      "job-search": "Llevo meses buscando trabajo, ¿qué hago mal?",
+      "kindness-acts": "Dame ideas de actos de bondad que puedo hacer",
+      "language-curiosities": "Cuéntame curiosidades sobre los idiomas",
+      "language-learning": "¿Cómo puedo mejorar mi inglés rápidamente?",
+      "learn-about-ai": "Explícame cómo funciona la inteligencia artificial",
+      "learning-guitar": "¿Es difícil aprender a tocar la guitarra de adulto?",
+      "learning-motivation": "¿Cómo puedo mantenerme motivado para aprender?",
+      "learning-online": "¿Cuáles son los mejores cursos online gratuitos?",
+      "learning-strategies": "¿Cuáles son las mejores técnicas de estudio?",
+      "learn-new-language": "¿Cuál es la mejor forma de aprender un nuevo idioma?",
+      "life-balance": "¿Cómo puedo encontrar mejor equilibrio en mi vida?",
+      "life-hacks": "Dame trucos útiles para la vida cotidiana",
+      "life-lessons": "¿Qué lecciones de vida son importantes aprender?",
+      "life-philosophy": "Háblame sobre diferentes filosofías de vida",
+      "local-traditions": "Cuéntame tradiciones interesantes de España",
+      "loneliness": "Me siento solo últimamente, ¿qué puedo hacer?",
+      "meditation-guide": "¿Cómo puedo empezar a meditar?",
+      "memory-improvement": "¿Cómo puedo mejorar mi memoria?",
+      "memory-lane": "Háblame de cosas que eran populares en el pasado",
+      "mental-health": "¿Cómo puedo cuidar mejor mi salud mental?",
+      "mindful-moments": "Ayúdame a encontrar momentos de calma en mi día",
+      "mindfulness-practice": "Enséñame ejercicios de mindfulness",
+      "money-saving": "Ayúdame a ahorrar dinero en mi día a día",
+      "morning-coffee": "¿Cómo hacer un café perfecto en casa?",
+      "morning-energy": "Siempre me levanto sin energía, ¿cómo cambio esto?",
+      "morning-motivation": "¿Cómo empezar el día con energía positiva?",
+      "morning-routine": "¿Cómo crear una rutina matutina efectiva?",
+      "movie-recommendations": "Recomiéndame películas interesantes para ver",
+      "music-discovery": "¿Cómo puedo descubrir música nueva que me guste?",
+      "music-recommendations": "¿Qué música nueva me recomiendas?",
+      "natural-wonders": "Descríbeme las maravillas naturales del mundo",
+      "nature-connection": "¿Cómo puedo conectar más con la naturaleza?",
+      "netflix-recommendations": "No sé qué ver en Netflix, ¿me recomiendas algo?",
+      "new-city": "Me mudé a una nueva ciudad, ¿cómo hago amigos?",
+      "night-out": "Salgo esta noche con amigos, ¿qué planes hay?",
+      "night-routine": "¿Qué debería hacer antes de acostarme?",
+      "ocean-mysteries": "Háblame de los misterios del océano",
+      "optimism-tips": "¿Cómo puedo ser más optimista?",
+      "party-games": "Dame ideas de juegos para una reunión con amigos",
+      "personal-growth": "¿Cómo puedo seguir creciendo como persona?",
+      "personality-types": "Explícame los diferentes tipos de personalidad",
+      "pet-care": "Dame consejos para cuidar mejor a mi mascota",
+      "phone-addiction": "Paso demasiado tiempo en el móvil, ¿qué hago?",
+      "phone-etiquette": "¿Cuáles son las reglas básicas del móvil en sociedad?",
+      "phone-photography": "¿Cómo tomar mejores fotos con mi móvil?",
+      "photography-tips": "Dame consejos para mejorar mis fotografías",
+      "plant-care": "Se me mueren todas las plantas, ¿qué hago mal?",
+      "positive-thinking": "Ayúdame a desarrollar pensamientos más positivos",
+      "problem-solving": "Ayúdame a resolver un problema que tengo",
+      "procrastination": "Siempre dejo todo para último momento, ¿cómo cambio?",
+      "productivity-apps": "¿Qué aplicaciones me ayudan a ser más productivo?",
+      "productivity-tips": "Dame consejos para ser más productivo en mi día a día",
+      "public-speaking": "Tengo miedo a hablar en público, ¿qué hago?",
+      "rainy-day": "Está lloviendo y me aburro, ¿qué hago en casa?",
+      "random-facts": "Cuéntame datos curiosos que no sabía",
+      "random-knowledge": "Comparte conmigo conocimiento aleatorio pero interesante",
+      "relationship-advice": "Dame consejos para mejorar mis relaciones personales",
+      "room-decoration": "Quiero decorar mi habitación con poco dinero",
+      "saving-money": "Gasto demasiado dinero, ¿cómo controlo mis gastos?",
+      "science-explained": "Explícame conceptos científicos de forma simple",
+      "seasonal-activities": "¿Qué actividades puedo hacer según la época del año?",
+      "seasonal-advice": "Dame consejos para esta época del año",
+      "seasonal-changes": "¿Por qué cambian las estaciones del año?",
+      "self-care": "Dame ideas para cuidarme mejor a mí mismo",
+      "simple-joys": "Recuérdame las cosas simples que traen felicidad",
+      "simple-pleasures": "Háblame de los pequeños placeres de la vida",
+      "sleep-improvement": "Tengo problemas para dormir bien, ¿qué puedo hacer?",
+      "small-talk": "¿Cómo iniciar conversaciones casuales con la gente?",
+      "social-anxiety": "Me da ansiedad hablar con desconocidos, ¿consejos?",
+      "social-media": "¿Debería usar menos las redes sociales?",
+      "social-situations": "¿Cómo puedo ser menos tímido en situaciones sociales?",
+      "space-facts": "Cuéntame curiosidades sobre el espacio",
+      "stress-management": "¿Cómo puedo manejar mejor el estrés?",
+      "study-tips": "¿Cómo puedo concentrarme mejor al estudiar?",
+      "surprise-party": "Quiero organizar una fiesta sorpresa, ¿cómo?",
+      "sustainable-living": "¿Cómo puedo vivir de forma más sostenible?",
+      "technology-explained": "Explícame las últimas tendencias tecnológicas",
+      "time-management": "Ayúdame a gestionar mejor mi tiempo",
+      "toxic-people": "¿Cómo lidio con personas tóxicas en mi vida?",
+      "travel-planning": "Ayúdame a planificar mi próximo viaje",
+      "urban-myths": "Cuéntame sobre mitos urbanos interesantes",
+      "water-intake": "Nunca me acuerdo de beber agua, ¿cómo crear el hábito?",
+      "weather-chat": "Explícame cómo se forman los fenómenos meteorológicos",
+      "weather-phenomena": "Explícame fenómenos meteorológicos raros",
+      "weekend-activities": "Dame ideas de qué hacer este fin de semana",
+      "weekend-getaway": "Quiero hacer una escapada de fin de semana, ¿dónde?",
+      "weekend-plans": "Estoy aburrido, ¿qué puedo hacer hoy?",
+      "winter-blues": "Me siento triste en invierno, ¿es normal?",
+      "workout-home": "No puedo ir al gym, ¿cómo ejercitarme en casa?",
+      "workout-routine": "Necesito una rutina de ejercicios para hacer en casa",
+      "world-cultures": "Enséñame sobre tradiciones de otros países",
+      "world-records": "Háblame de récords mundiales increíbles"
+    },
+    "title": {
+      "placeholder": "Escribe el nombre del chat..."
+    },
+    "welcome": "¡Hola! Todo bien por aquí",
+    "welcome-subtitle": "¿En qué te puedo ayudar hoy?"
+  },
+  "common": {
+    "cancel": "Cancelar"
+  },
+  "Eliminando": "Eliminando",
+  "Eliminando...": "Eliminando...",
+  "Enviando": "Enviando",
+  "Enviando...": "Enviando...",
+  "Guardando": "Guardando",
   "landing": {
     "description": "Un simple clon de ChatGPT, creado por mi",
     "sign-in": "Acceder",
     "sign-up": "Crear cuenta"
+  },
+  "Pensando": "Pensando",
+  "Pensando...": "Pensando...",
+  "Procesando": "Procesando",
+  "Procesando...": "Procesando...",
+  "settings": {
+    "description": "Gestiona tu perfil, preferencias y configuración de la cuenta",
+    "general": {
+      "default-model": {
+        "help": "Este modelo se usará por defecto en nuevos chats",
+        "label": "Modelo por Defecto"
+      },
+      "language": {
+        "label": "Idioma"
+      },
+      "save": "Guardar Cambios",
+      "theme": {
+        "label": "Tema"
+      }
+    },
+    "profile": {
+      "avatar-help": "JPG, PNG. Máximo 300KB.",
+      "change-avatar": "Cambiar Avatar",
+      "email": "Correo Electrónico",
+      "email-help": "El correo electrónico no se puede cambiar",
+      "full-name": "Nombre",
+      "full-name-placeholder": "Ingresa tu nombre",
+      "save": "Guardar Cambios"
+    },
+    "tabs": {
+      "general": "General",
+      "profile": "Perfil",
+      "usage": "Límites de Uso"
+    },
+    "title": "Configuración"
   }
 }
