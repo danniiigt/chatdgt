@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
+import { getTranslate } from "@/tolgee/server";
 import Link from "next/link";
 import React from "react";
 
-const LandingPage = () => {
+const LandingPage = async () => {
+  const t = await getTranslate();
+
   return (
     <div className="w-full h-dvh flex-col flex items-center justify-center space-y-10">
       <div>
@@ -13,7 +16,7 @@ const LandingPage = () => {
       <header className="text-center space-y-2">
         <h1 className="text-4xl font-semibold">ChatDGT</h1>
         <h3 className="text-muted-foreground inline-block mr-1">
-          A simple clone of ChatGPT, created by me
+          {t("landing.description", "A simple clone of ChatGPT, created by me")}
         </h3>
         <Link
           href="https://github.com/danniiigt"
@@ -28,7 +31,7 @@ const LandingPage = () => {
       <div className="w-full max-w-sm flex flex-col items-center justify-center gap-x-8">
         <Button size="lg" className="w-full" variant="secondary" asChild>
           <Link prefetch={true} href="/sign-in">
-            Acceder
+            {t("landing.signin", "Acceder")}
           </Link>
         </Button>
 
@@ -42,7 +45,7 @@ const LandingPage = () => {
 
         <Button size="lg" className="w-full" asChild>
           <Link prefetch={true} href="/sign-up">
-            Registrarse
+            {t("landing.signup", "Registrarse")}
           </Link>
         </Button>
       </div>
