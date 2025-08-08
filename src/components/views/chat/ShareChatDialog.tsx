@@ -4,13 +4,12 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DrawerDialog,
+  DrawerDialogContent,
+  DrawerDialogHeader,
+  DrawerDialogTitle,
+  DrawerDialogTrigger,
+} from "@/components/ui/drawer-dialog";
 import { useTranslate } from "@tolgee/react";
 import { Share, LoaderCircle, Info, Link2, Copy, Check } from "lucide-react";
 import { Icons } from "@/components/ui/icons";
@@ -18,6 +17,9 @@ import { toast } from "sonner";
 
 interface ShareChatDialogProps {
   chatId?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean;
 }
 
 interface ShareResponse {
@@ -30,12 +32,16 @@ interface ShareResponse {
   };
 }
 
-export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
+export const ShareChatDialog = ({ chatId, open: externalOpen, onOpenChange: externalOnOpenChange, showTrigger = true }: ShareChatDialogProps) => {
   // Third party hooks
   const { t } = useTranslate();
 
   // State
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  // Use external state if provided, otherwise use internal state
+  const isOpen = externalOpen !== undefined ? externalOpen : internalIsOpen;
+  const setIsOpen = externalOnOpenChange || setInternalIsOpen;
   const [shareUrl, setShareUrl] = useState<string>("");
   const [isShared, setIsShared] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -128,24 +134,28 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
   if (hideShareChat) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" title={t("chat.share", "Compartir")}>
-          <Share className="h-4 w-4" />
-          <span>{t("chat.share", "Compartir")}</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
+    <DrawerDialog open={isOpen} onOpenChange={handleOpenChange}>
+      {showTrigger && (
+        <DrawerDialogTrigger asChild>
+          <Button variant="ghost" title={t("chat.share", "Compartir")}>
+            <Share className="h-4 w-4" />
+            <span className="hidden sm:block">
+              {t("chat.share", "Compartir")}
+            </span>
+          </Button>
+        </DrawerDialogTrigger>
+      )}
+      <DrawerDialogContent className="sm:max-w-md p-4 pt-0 sm:pt-6 sm:p-6">
+        <DrawerDialogHeader>
+          <DrawerDialogTitle>
             {isShared
               ? t("chat.share-dialog.created-title", "Enlace público creado")
               : t(
                   "chat.share-dialog.title",
                   "Compartir el enlace público al chat"
                 )}
-          </DialogTitle>
-        </DialogHeader>
+          </DrawerDialogTitle>
+        </DrawerDialogHeader>
 
         {!isShared ? (
           <>
@@ -171,7 +181,7 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
             </div>
 
             {/* Privacy notice */}
-            <div className="space-y-3">
+            <div className="space-y-3 my-4 sm:my-0">
               <p className="text-sm text-muted-foreground">
                 {t(
                   "chat.share-dialog.privacy-notice",
@@ -223,7 +233,7 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
             </div>
 
             {/* Success notice */}
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground my-4 sm:my-0">
               {t(
                 "chat.share-dialog.success-message",
                 "Se ha creado un enlace público a tu chat. Gestiona los chats compartidos previamente en cualquier momento a través de la configuración."
@@ -293,7 +303,7 @@ export const ShareChatDialog = ({ chatId }: ShareChatDialogProps) => {
             </div>
           </>
         )}
-      </DialogContent>
-    </Dialog>
+      </DrawerDialogContent>
+    </DrawerDialog>
   );
 };

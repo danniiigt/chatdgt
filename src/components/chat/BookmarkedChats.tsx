@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "../ui/sidebar";
 import { EditChatDialog } from "../views/chat/EditChatDialog";
 import { DeleteChatDialogSimple } from "../views/chat/DeleteChatDialogSimple";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,6 +16,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { BookmarkButton } from "./BookmarkButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BookmarkedChatsProps {
   chats: Chat[];
@@ -20,6 +26,8 @@ export const BookmarkedChats = ({ chats }: BookmarkedChatsProps) => {
   // Third party hooks
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
+  const { toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
 
   // State
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -68,6 +76,7 @@ export const BookmarkedChats = ({ chats }: BookmarkedChatsProps) => {
             <Link
               href={`/chat?chatId=${chat.id}`}
               className="flex items-center w-full relative"
+              onClick={isMobile ? toggleSidebar : undefined}
             >
               <span
                 className={cn("truncate pr-0 transition-all duration-75", {

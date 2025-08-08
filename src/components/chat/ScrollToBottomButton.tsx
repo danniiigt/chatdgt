@@ -31,7 +31,7 @@ export const ScrollToBottomButton = ({
 
     const { scrollTop, scrollHeight, clientHeight } = container;
     const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
-    const isNearBottom = scrollFromBottom <= 150; // 150px threshold
+    const isNearBottom = scrollFromBottom <= 175; // 175px threshold
     const hasScroll = scrollHeight > clientHeight + 50; // Only show if there's meaningful scroll
     const shouldShow = hasScroll && !isNearBottom;
 
@@ -101,7 +101,7 @@ export const ScrollToBottomButton = ({
       size="icon"
       onClick={scrollToBottom}
       className={cn(
-        "absolute bottom-[172px] left-1/2 -translate-x-1/2 z-50 h-8 w-8 rounded-full shadow-lg border",
+        "absolute sm:bottom-[172px] bottom-[146px] left-1/2 -translate-x-1/2 z-50 h-8 w-8 rounded-full shadow-lg border",
         "bg-background hover:bg-accent transition-all duration-200 ease-in-out",
         "opacity-95 hover:opacity-100 hover:scale-105",
         "border-border/50 hover:border-border",

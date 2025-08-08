@@ -82,7 +82,7 @@ export const ModelSelector = ({
     return (
       <Button
         variant="ghost"
-        className={`px-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-muted-foreground ${className}`}
+        className={`px-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-muted-foreground ${className} h-9`}
         disabled={true}
       >
         <span className="mr-1">{DEFAULT_MODEL}</span>
@@ -96,7 +96,7 @@ export const ModelSelector = ({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={`px-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-muted-foreground ${className}`}
+          className={`px-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-muted-foreground ${className} h-9`}
           disabled={disabled}
         >
           <span className="mr-1">{currentModel.name}</span>

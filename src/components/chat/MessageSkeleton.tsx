@@ -22,9 +22,11 @@ interface MessageSkeletonListProps {
   count?: number;
 }
 
-export const MessageSkeletonList = ({ count = 5 }: MessageSkeletonListProps) => {
+export const MessageSkeletonList = ({
+  count = 5,
+}: MessageSkeletonListProps) => {
   return (
-    <div className="space-y-4 p-4 pt-6">
+    <div className="space-y-3 sm:space-y-4 p-4 px-3.5 sm:px-4 sm:pt-6">
       {[...Array(count)].map((_, index) => (
         <MessageSkeleton key={index} />
       ))}

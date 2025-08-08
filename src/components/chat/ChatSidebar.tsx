@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSearchChat } from "@/hooks/useSearchChat";
 import { randomColor } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const ChatSidebar = () => {
   // Third party hooks
@@ -36,6 +37,7 @@ export const ChatSidebar = () => {
   const { toggleSidebar } = useSidebar();
   const user = useUser();
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
 
   // Custom hooks
   const { chats, isLoading } = useChatList();
@@ -87,7 +89,11 @@ export const ChatSidebar = () => {
         <div className="flex items-center gap-2 px-2 justify-between">
           <Icons.chatgpt className="size-5" />
 
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={isMobile ? toggleSidebar : undefined}
+          >
             <PanelLeftClose
               className="size-5 text-muted-foreground"
               strokeWidth={1.25}
@@ -100,7 +106,11 @@ export const ChatSidebar = () => {
             asChild
             className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
           >
-            <Link href="/chat" prefetch={true}>
+            <Link
+              href="/chat"
+              prefetch={true}
+              onClick={isMobile ? toggleSidebar : undefined}
+            >
               <div className="flex items-center gap-x-2 w-full pr-2">
                 <MessageSquare className="size-4" />
                 <span>{t("chat.new-chat", "Nuevo")}</span>
@@ -121,6 +131,7 @@ export const ChatSidebar = () => {
               href="/archived-chats"
               prefetch={true}
               onMouseEnter={prefetchArchivedChats}
+              onClick={isMobile ? toggleSidebar : undefined}
             >
               <div className="flex items-center gap-x-2 w-full pr-2">
                 <Archive className="size-4" />
@@ -136,7 +147,10 @@ export const ChatSidebar = () => {
           </SidebarMenuButton>
           <SidebarMenuButton
             className="w-full justify-start gap-2 cursor-pointer py-4.5 group-2"
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              isMobile && toggleSidebar();
+            }}
           >
             <div className="flex items-center gap-x-2 w-full pr-2">
               <Search className="size-4" />
@@ -202,7 +216,10 @@ export const ChatSidebar = () => {
               asChild
               className="w-full justify-start gap-2 py-6 px-2"
             >
-              <Link href="/settings">
+              <Link
+                href="/settings"
+                onClick={isMobile ? toggleSidebar : undefined}
+              >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={avatarUrl} alt={fullName || "Avatar"} />
                   <AvatarFallback

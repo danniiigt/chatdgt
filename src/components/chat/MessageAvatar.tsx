@@ -25,7 +25,7 @@ export const MessageAvatar = ({
 
   if (isUser) {
     return (
-      <Avatar className="h-8 w-8 shrink-0">
+      <Avatar className="h-7 w-7 sm:h-8 sm:w-8 shrink-0">
         <AvatarImage src={userAvatarUrl} alt={userName || "Avatar"} />
         <AvatarFallback
           style={{ backgroundColor: randomColor }}
@@ -38,7 +38,7 @@ export const MessageAvatar = ({
   }
 
   return (
-    <Avatar className="h-8 w-8 shrink-0">
+    <Avatar className="h-7 w-7 sm:h-8 sm:w-8 shrink-0">
       <AvatarImage src="/ai-avatar.png" alt="AI" />
       <AvatarFallback className="bg-secondary text-secondary-foreground text-xs">
         AI

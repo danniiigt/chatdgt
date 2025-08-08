@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DrawerDialog,
+  DrawerDialogContent,
+  DrawerDialogDescription,
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogTitle,
+  DrawerDialogTrigger,
+} from "@/components/ui/drawer-dialog";
 import { useTranslate } from "@tolgee/react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle, Trash2 } from "lucide-react";
@@ -19,16 +19,23 @@ import { toast } from "sonner";
 
 interface DeleteChatDialogProps {
   chatId?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean;
 }
 
-export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
+export const DeleteChatDialog = ({ chatId, open: externalOpen, onOpenChange: externalOnOpenChange, showTrigger = true }: DeleteChatDialogProps) => {
   // Third party hooks
   const { t } = useTranslate();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   // State
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  // Use external state if provided, otherwise use internal state
+  const isOpen = externalOpen !== undefined ? externalOpen : internalIsOpen;
+  const setIsOpen = externalOnOpenChange || setInternalIsOpen;
 
   // Data fetching
   const deleteChatMutation = useMutation({
@@ -77,29 +84,31 @@ export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
   if (hideDeleteChat) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="text-red-500 hover:text-red-700"
-          title={t("chat.delete", "Eliminar")}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+    <DrawerDialog open={isOpen} onOpenChange={setIsOpen}>
+      {showTrigger && (
+        <DrawerDialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="text-red-500 hover:text-red-700"
+            title={t("chat.delete", "Eliminar")}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </DrawerDialogTrigger>
+      )}
+      <DrawerDialogContent>
+        <DrawerDialogHeader>
+          <DrawerDialogTitle>
             {t("chat.delete.confirm.title", "Eliminar conversación")}
-          </DialogTitle>
-          <DialogDescription>
+          </DrawerDialogTitle>
+          <DrawerDialogDescription>
             {t(
               "chat.delete.confirm.description",
               "Esta acción no se puede deshacer. La conversación y todos sus mensajes serán eliminados permanentemente."
             )}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
+          </DrawerDialogDescription>
+        </DrawerDialogHeader>
+        <DrawerDialogFooter>
           <Button
             variant="outline"
             onClick={() => setIsOpen(false)}
@@ -121,8 +130,8 @@ export const DeleteChatDialog = ({ chatId }: DeleteChatDialogProps) => {
               t("chat.delete", "Eliminar")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DrawerDialogFooter>
+      </DrawerDialogContent>
+    </DrawerDialog>
   );
 };

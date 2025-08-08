@@ -46,7 +46,7 @@ export const MessageList = ({
 
   return (
     <div className={cn("flex-1", className)}>
-      <div className="space-y-4 p-4 pt-6">
+      <div className="space-y-3 sm:space-y-4 p-4 px-3.5 sm:px-4 sm:pt-6">
         {messages.map((message) => (
           <div key={message.id} className="group">
             <MessageBubble

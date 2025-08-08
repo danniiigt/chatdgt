@@ -61,14 +61,14 @@ export const ChatInput = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 pb-8 pt-0">
+    <div className="w-full max-w-4xl mx-auto p-3 pb-3 sm:p-4 sm:pb-8 pt-0">
       {/* Chat input box */}
       <div className="relative">
         <div className="flex flex-col p-4 border border-gray-200 rounded-4xl shadow-xs bg-white dark:bg-foreground/5 dark:border-foreground/10">
           {/* Top row - Input and buttons */}
           <div className="flex items-center gap-3 flex-1">
             {/* Text input */}
-            <div className="flex-1 max-h-32">
+            <div className="flex-1 max-h-44">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -77,7 +77,7 @@ export const ChatInput = ({
                   "chat.input-placeholder",
                   "¿Por dónde deberíamos empezar?"
                 )}
-                className="w-full resize-none bg-transparent border-none outline-none text-base leading-6 placeholder:text-gray-500 dark:placeholder:text-gray-400 py-2 pl-2"
+                className="w-full resize-none bg-transparent border-none outline-none text-base leading-6 placeholder:text-gray-500 dark:placeholder:text-gray-400 py-2 pl-2 max-h-44"
                 rows={1}
                 style={{
                   minHeight: "40px",
@@ -86,7 +86,7 @@ export const ChatInput = ({
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
                   target.style.height = "40px";
-                  target.style.height = `${target.scrollHeight}px`;
+                  target.style.height = `${Math.min(target.scrollHeight, 176)}px`;
                 }}
               />
             </div>

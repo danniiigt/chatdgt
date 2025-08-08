@@ -5,10 +5,10 @@ import { PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { ChatInput } from "./ChatInput";
-import { ShareChatDialog } from "./ShareChatDialog";
-import { DeleteChatDialog } from "./DeleteChatDialog";
-import { ArchiveChatDialog } from "./ArchiveChatDialog";
+import { ChatActionsMenu } from "./ChatActionsMenu";
+import { BookmarkChatButton } from "./BookmarkChatButton";
 import { ScrollToBottomButton } from "@/components/chat/ScrollToBottomButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChatBoxLayoutProps {
   children: React.ReactNode;
@@ -28,27 +28,25 @@ export const ChatBoxLayout = ({
   isLoading,
 }: ChatBoxLayoutProps) => {
   // Third party hooks
-  const { open, setOpen } = useSidebar();
+  const { open, toggleSidebar } = useSidebar();
+
+  // Custom hooks
+  const isMobile = useIsMobile();
 
   // Refs
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Helpers / Functions
-  const handleToggleSidebar = () => {
-    setOpen(!open);
-  };
-
   return (
     <div className="flex flex-col h-full w-full relative">
       {/* Top Bar */}
-      <div className="flex items-center justify-between py-0 px-4 h-14 border-b 2xl:border-b-0 2xl:absolute 2xl:top-0 2xl:inset-x-0">
+      <div className="flex items-center justify-between py-0 px-3 sm:px-4 h-14 border-b 2xl:border-b-0 2xl:absolute 2xl:top-0 2xl:inset-x-0">
         {/* Left side - Sidebar toggle (only show when sidebar is closed) */}
         <div className="flex items-center">
-          {!open && (
+          {(!open || isMobile) && (
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleToggleSidebar}
+              onClick={isMobile ? toggleSidebar : undefined}
               className="mr-1"
             >
               <PanelLeftOpen
@@ -68,9 +66,8 @@ export const ChatBoxLayout = ({
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-x-1.5">
-          <ShareChatDialog chatId={chatId} />
-          <ArchiveChatDialog chatId={chatId} />
-          <DeleteChatDialog chatId={chatId} />
+          <ChatActionsMenu chatId={chatId} />
+          <BookmarkChatButton chatId={chatId} />
         </div>
       </div>
 

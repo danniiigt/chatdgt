@@ -28,9 +28,9 @@ export const NoChatSelectedView = () => {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="flex flex-col items-center px-4">
-        <header className="space-y-8">
-          <Icons.chatgpt className="size-40 mx-auto" />
+      <div className="flex flex-col items-center px-4 py-8">
+        <header className="space-y-4 sm:space-y-8">
+          <Icons.chatgpt className="size-28 sm:size-40 mx-auto" />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center space-y-1">
               <h1 className="text-3xl font-semibold">

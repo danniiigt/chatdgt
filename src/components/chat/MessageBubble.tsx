@@ -38,30 +38,49 @@ export const MessageBubble = ({
   return (
     <div
       className={cn(
-        "flex gap-3 p-4 rounded-lg transition-colors",
+        "flex flex-col items-start sm:flex-row gap-3 p-2.5 sm:p-4 rounded-lg transition-colors",
         isUser && "bg-primary/5",
         isAssistant && "bg-transparent"
       )}
     >
-      <MessageAvatar
-        isUser={isUser}
-        userName={fullName}
-        userAvatarUrl={avatarUrl}
-      />
+      <div className="flex items-center sm:items-start gap-x-2">
+        <MessageAvatar
+          isUser={isUser}
+          userName={fullName}
+          userAvatarUrl={avatarUrl}
+        />
+
+        <div className="block sm:hidden">
+          <MessageHeader
+            isUser={isUser}
+            isAssistant={isAssistant}
+            messageModel={message.model}
+            messageCreatedAt={message.created_at}
+            messageContent={message.content}
+            messageId={message.id}
+            currentSpeakingId={currentSpeakingId}
+            isCopied={isCopied}
+            onSpeak={onSpeak}
+            onCopy={copyToClipboard}
+          />
+        </div>
+      </div>
 
       <div className="flex-1 space-y-2">
-        <MessageHeader
-          isUser={isUser}
-          isAssistant={isAssistant}
-          messageModel={message.model}
-          messageCreatedAt={message.created_at}
-          messageContent={message.content}
-          messageId={message.id}
-          currentSpeakingId={currentSpeakingId}
-          isCopied={isCopied}
-          onSpeak={onSpeak}
-          onCopy={copyToClipboard}
-        />
+        <div className="hidden sm:block">
+          <MessageHeader
+            isUser={isUser}
+            isAssistant={isAssistant}
+            messageModel={message.model}
+            messageCreatedAt={message.created_at}
+            messageContent={message.content}
+            messageId={message.id}
+            currentSpeakingId={currentSpeakingId}
+            isCopied={isCopied}
+            onSpeak={onSpeak}
+            onCopy={copyToClipboard}
+          />
+        </div>
 
         <div>
           {isAssistant ? (
@@ -76,7 +95,8 @@ export const MessageBubble = ({
         {isAssistant && message.tokens && (
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Badge variant="outline" className="text-xs">
-              {t("chat.message.tokens", "Tokens")}: {message.tokens.toLocaleString()}
+              {t("chat.message.tokens", "Tokens")}:{" "}
+              {message.tokens.toLocaleString()}
             </Badge>
           </div>
         )}
