@@ -1,15 +1,16 @@
 "use client";
 
 import { useTranslate } from "@tolgee/react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   LoaderCircle,
   ArchiveRestore,
   Trash2,
-  MessagesSquare
+  MessagesSquare,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { UseMutationResult } from "@tanstack/react-query";
 
 type Chat = {
@@ -35,8 +36,14 @@ export const ArchivedChatItem = ({
 }: ArchivedChatItemProps) => {
   // Third party hooks
   const { t } = useTranslate();
+  const pathname = usePathname();
 
   // Helpers / Functions
+  const getCurrentLocale = () => {
+    const locale = pathname.split('/')[1];
+    return locale === 'en' ? enUS : es;
+  };
+
   const handleUnarchive = () => {
     unarchiveMutation.mutate(chat.id);
   };
@@ -57,7 +64,7 @@ export const ArchivedChatItem = ({
             {t("chat.archived.date", "Archivado")}{" "}
             {formatDistanceToNow(new Date(chat.updated_at), {
               addSuffix: true,
-              locale: es,
+              locale: getCurrentLocale(),
             })}
           </p>
         </div>
